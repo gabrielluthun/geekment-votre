@@ -29,17 +29,18 @@ RG19 : Le numéro de carte bancaire ne devra être stockée nulle part
 RG20 : Le JDR devra avoir un onglet dédié au sein de l'application  
 RG21 : Le présentateur du JDR est appelé "MJ", ou "Maître du Jeu"  
 RG22 : Cet onglet devra présenter le JDR de façon détaillée   
-RG23 : Cet onglet devra contenir un bouton d'action
+RG23 : Cet onglet devra contenir un bouton d'action  
 RG24 : Ce bouton devra rediriger vers un formulaire de réservation  
-RG25 : Ce formulaire permettra aux joueurs de réserver un créneau pour leur future partie  
-RG26 : La réservation devra être individuelle (1 formulaire par joueur)  
-RG27 : Les futurs joueurs devront indiquer leur niveau d'expérience dans ce formulaire  
-RG28 : Le MJ pourra consulter une synthèse du formulaire sur une plateforme dédiée  
+RG25 : Ce formulaire permettra aux joueurs de réserver un créneau pour leur future partie 
+RG26 : Une réservation doit être impossible pour une date / heure passée  
+RG27 : La réservation devra être individuelle (1 formulaire par joueur)  
+RG28 : Les futurs joueurs devront indiquer leur niveau d'expérience dans ce formulaire  
+RG29 : Le MJ pourra consulter une synthèse du formulaire sur une plateforme dédiée  
 
 ### Crowdfunding  
-RG29 : L'application doit contenir un onglet ou une page spécifiquement dédiée au crowdfunding du JDR  
-RG30 : Cette section doit présenter le contexte narratif et l'univers du JDR  
-RG31 : Cette section doit comporter des visuels / illustrations représentatif du JDR  
-RG32 : Cette section doit comporter un bouton d'appel à l'action bien visible  
-RG33 : Le bouton doit renvoyer vers une page de donation / financement  
-RG34 : L'entièreté de la section devra disparaître / remplacée lors de la fin de la campagne de financement  
+RG30 : L'application doit contenir un onglet ou une page spécifiquement dédiée au crowdfunding du JDR  
+RG31 : Cette section doit présenter le contexte narratif et l'univers du JDR  
+RG32 : Cette section doit comporter des visuels / illustrations représentatif du JDR  
+RG33 : Cette section doit comporter un bouton d'appel à l'action bien visible  
+RG34 : Le bouton doit renvoyer vers une page de donation / financement  
+RG35 : L'entièreté de la section devra disparaître / remplacée lors de la fin de la campagne de financement  
