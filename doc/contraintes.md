@@ -39,3 +39,16 @@
 * Accessibilité Cible :
   - Interface intuitive adaptée à la cible "Passionnés de JDR / Pop-culture".
   - Navigation fluide pour faciliter la prise de contact et l'achat.
+
+4. CONTRAINTES FONCTIONNELLES
+------------------------------------------------------------------
+* Redondance des paiements (Failover) :
+  - Le système doit proposer PayPal par défaut.
+  - Le système doit basculer sur Stripe uniquement si PayPal renvoie une erreur ou est indisponible.
+
+* Redirection Crowdfunding :
+  - La participation au financement participatif ne doit pas être native (in-app).
+  - L'application doit gérer une redirection propre vers la plateforme externe (future cagnotte) via le navigateur du téléphone.
+
+* Gestion des stocks (Flux Tendu) :
+  - Le système doit gérer des produits sans stock physique immédiat (commande fournisseur déclenchée par l'achat).  
