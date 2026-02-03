@@ -24,3 +24,18 @@
 
 * Coût de maintenance :
   - L'architecture doit rester légère (hébergement backend peu coûteux)  
+
+
+## 3. CONTRAINTES ERGONOMIQUES & GRAPHIQUES (DESIGN)
+------------------------------------------------------------------
+* Charte Graphique Imposée :
+  - Respect strict de l'identité visuelle existante (Logo, Font, Couleurs) issue du site "geekementvotre.fr".
+  - Cohérence visuelle obligatoire entre l'application et la marque actuelle.
+
+* Niveau de qualité (Image de Marque) :
+  - Objectif "Crédibilisation" : L'esthétique de l'application doit être supérieure à celle du site actuel (qualifié de "fait à la va-vite").
+  - Rendu professionnel exigé pour rassurer les clients potentiels.
+
+* Accessibilité Cible :
+  - Interface intuitive adaptée à la cible "Passionnés de JDR / Pop-culture".
+  - Navigation fluide pour faciliter la prise de contact et l'achat.
