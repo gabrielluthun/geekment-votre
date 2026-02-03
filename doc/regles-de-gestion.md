@@ -19,7 +19,7 @@
 **RG14** : La description d'un produit devra être rédigée d'une longueur de 5 lignes **maximum**   
 **RG15** : Le prix d'un produit devra **toujours** afficher le tarif en Euros (€)  
 **RG16** : Le paiement d'une commande devra s'effectuer via PayPal  
-**RG17** : En cas d'indisponibilité de PayPal, une alternative de paiement devra être proposée (Stripe) 
+**RG17** : En cas d'indisponibilité de PayPal, une alternative de paiement devra être proposée (Stripe)  
 **RG18** : Sur PayPal, une commande ne pourra **pas** être honorée si les renseignements demeurent incomplètes   
 **RG19** : Le numéro de carte bancaire ne devra être stockée nulle part  
 
