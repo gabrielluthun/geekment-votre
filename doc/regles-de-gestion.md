@@ -16,7 +16,7 @@
 **RG11** : Une dizaine de produits **maximum** devront être présentés  
 **RG12** : Chaque produit **doit** inclure la photo, le titre, une description et un prix  
 **RG13** : Le titre d'un produit devra tenir en quelques mots  
-**RG14** : La description d'un produit devra être rédigée d'une longueur de 5 lignes **maximum** 
+**RG14** : La description d'un produit devra être rédigée d'une longueur de 5 lignes **maximum**   
 **RG15** : Le prix d'un produit devra **toujours** afficher le tarif en Euros (€)  
 **RG16** : Le paiement d'une commande devra s'effectuer via PayPal 
 **RG17** : En cas d'indisponibilité de PayPal, une alternative de paiement devra être proposée (Stripe)   
