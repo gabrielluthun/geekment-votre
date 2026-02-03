@@ -18,8 +18,8 @@
 **RG13** : Le titre d'un produit devra tenir en quelques mots  
 **RG14** : La description d'un produit devra être rédigée d'une longueur de 5 lignes **maximum**   
 **RG15** : Le prix d'un produit devra **toujours** afficher le tarif en Euros (€)  
-**RG16** : Le paiement d'une commande devra s'effectuer via PayPal 
-**RG17** : En cas d'indisponibilité de PayPal, une alternative de paiement devra être proposée (Stripe)   
+**RG16** : Le paiement d'une commande devra s'effectuer via PayPal  
+**RG17** : En cas d'indisponibilité de PayPal, une alternative de paiement devra être proposée (Stripe) 
 **RG18** : Sur PayPal, une commande ne pourra **pas** être honorée si les renseignements demeurent incomplètes   
 **RG19** : Le numéro de carte bancaire ne devra être stockée nulle part  
 
@@ -31,7 +31,7 @@
 **RG22** : Cet onglet devra présenter le JDR de façon détaillée   
 **RG23** : Cet onglet devra contenir un **bouton** d'action  
 **RG24** : Ce bouton devra **rediriger** vers un formulaire de réservation  
-**RG25** : Ce formulaire permettra aux joueurs de réserver un créneau pour leur future partie 
+**RG25** : Ce formulaire permettra aux joueurs de réserver un créneau pour leur future partie  
 **RG26** : Une réservation **doit** être impossible pour une date / heure passée  
 **RG27** : La réservation devra être **individuelle** (1 formulaire par joueur)  
 **RG28** : Les futurs joueurs devront indiquer leur niveau d'expérience dans ce formulaire  
