@@ -1,6 +1,6 @@
-CONTRAINTES DU PROJET - GEEKMENT VÔTRE
+# CONTRAINTES DU PROJET - GEEKMENT VÔTRE
 
-1. CONTRAINTES TECHNIQUES
+## 1. CONTRAINTES TECHNIQUES
 ------------------------------------------------------------------
 * Système d'exploitation cible :
   - Développement exclusif pour Android.
@@ -13,4 +13,14 @@ CONTRAINTES DU PROJET - GEEKMENT VÔTRE
 * Interopérabilité (API & Services Tiers) :
   - Google Agenda : Synchronisation requise pour la gestion des créneaux de réservation (MJ à domicile).
   - Modules de Paiement : Intégration de PayPal (choix primaire) et Stripe (choix secondaire en cas d'échec).
-  - Crowdfunding : Intégration par lien externe (redirection web).
+  - Crowdfunding : Intégration par lien externe (redirection web).  
+
+
+## 2. CONTRAINTES FINANCIÈRES
+------------------------------------------------------------------
+* Budget Store :
+  - A ce jour, il n'est pas prévu un déploiement sur l'App Store d'Apple au vu des coûts que cela représente (99€/an).
+  - Publication uniquement sur le Google Play Store (frais unique de 25$).
+
+* Coût de maintenance :
+  - L'architecture doit rester légère (hébergement backend peu coûteux)  
