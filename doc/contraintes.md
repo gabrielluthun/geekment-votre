@@ -40,7 +40,7 @@
   - Interface intuitive adaptée à la cible "Passionnés de JDR / Pop-culture".
   - Navigation fluide pour faciliter la prise de contact et l'achat.   
   
-4. CONTRAINTES FONCTIONNELLES
+## 4. CONTRAINTES FONCTIONNELLES
 ------------------------------------------------------------------
 * Redondance des paiements (Failover) :
   - Le système doit proposer PayPal par défaut.
