@@ -38,8 +38,8 @@
 
 * Accessibilité Cible :
   - Interface intuitive adaptée à la cible "Passionnés de JDR / Pop-culture".
-  - Navigation fluide pour faciliter la prise de contact et l'achat.
-
+  - Navigation fluide pour faciliter la prise de contact et l'achat.   
+  
 4. CONTRAINTES FONCTIONNELLES
 ------------------------------------------------------------------
 * Redondance des paiements (Failover) :
