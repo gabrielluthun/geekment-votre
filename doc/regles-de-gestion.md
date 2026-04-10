@@ -7,8 +7,8 @@
 **RG5**: L'application **doit** contenir une section présentant l'activité du client  
 **RG6**: L'application **doit** contenir une section présentant l'expérience passée du client  
 **RG7**: L'application **doit** contenir le logo de l'entreprise du client  
-**RG8**: L'application **doit** contenir un "menu burger" cliquable  
-**RG9**: Le "menu burger" de l'application **doit** contenir l'intitulé de ses autres onglets/pages  
+**RG8**: L'application **doit** contenir des **onglets** sur le footer de chacune des pages   
+**RG9**: Chaque onglet de l'application **doit** contenir un intitulé   
 
 ## Boutique de "goodies"  
 
