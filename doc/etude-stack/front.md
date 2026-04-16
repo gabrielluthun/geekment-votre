@@ -47,14 +47,14 @@
 - **Faiblesses** : variabilité de perf selon le pont natif/librairies, maintenance plus sensible aux versions de dépendances.
 - **Adapté si** : équipe déjà très orientée React et priorité à la rapidité de mise en place.
 
-## Recommandation pour ton contexte
+## Recommandation finale
 
-Pour un projet **Android-only** avec objectif de crédibilité pro et maintien long terme, **Kotlin natif** est le meilleur choix global.
+Si l’objectif est de sortir une application Android sérieuse, stable et durable, **Kotlin natif** est fortement recommandé en premier choix.
 
-Si tu veux accélérer fortement le time-to-market tout en gardant un bon niveau de qualité, **Flutter** est la meilleure alternative.
+Le second meilleur compromis est **Flutter** : tu iras plus vite au démarrage, avec un bon niveau de qualité, mais un peu moins d’aisance qu’en natif sur certaines briques Android.
 
 ## Note sur les fonctionnalités demandées
 
-- Goodies + paiement : faisable dans les 3 stacks (intégration API Stripe/PayPal côté back obligatoire).
-- Crowdfunding : simple lien/onglet webview ou navigateur externe, faisable partout.
-- Réservation créneaux (Google Agenda) : plus direct en natif Kotlin, faisable aussi en Flutter/React Native via plugins/modules natifs.
+- **Boutique goodies + paiement** : possible dans les trois options. En pratique, il faudra de toute façon un back-end pour gérer Stripe ou PayPal proprement.
+- **Crowdfunding** : techniquement simple, avec un onglet dédié qui redirige vers la cagnotte (webview ou navigateur).
+- **Réservation de créneaux (Google Agenda)** : c’est le plus direct en Kotlin natif. Flutter et React Native le permettent aussi, mais via plugins/modules à bien valider en amont.
