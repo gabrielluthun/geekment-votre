@@ -58,3 +58,5 @@ Le second meilleur compromis est **Flutter** : tu iras plus vite au démarrage, 
 - **Boutique goodies + paiement** : possible dans les trois options. En pratique, il faudra de toute façon un back-end pour gérer Stripe ou PayPal proprement.
 - **Crowdfunding** : techniquement simple, avec un onglet dédié qui redirige vers la cagnotte (webview ou navigateur).
 - **Réservation de créneaux (Google Agenda)** : c’est le plus direct en Kotlin natif. Flutter et React Native le permettent aussi, mais via plugins/modules à bien valider en amont.
+
+# Stack choisie pour le front : Kotlin  
