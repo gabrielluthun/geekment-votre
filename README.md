@@ -6,7 +6,7 @@ Application mobile **Android** pour un prestataire de **jeux de rôle** (MJ à d
 
 - Mettre en avant l’activité et l’expérience du client, avec le logo de la marque.
 - Convertir : contact, réservation de créneaux (lien avec **Google Agenda**), achat de produits (**PayPal** en priorité, **Stripe** en secours), participation au financement via **redirection web** (pas de paiement crowdfunding in-app).
-- Interface **mobile-first**, alignée sur la charte du site [geekementvotre.fr](https://geekementvotre.fr), mais peut être améliorée (objectif : rendu plus professionnel que le site actuel).
+- Interface **mobile-first**, alignée sur la charte du site [geekementvotre.fr](https://www.geekementvotre.fr), mais peut être améliorée (objectif : rendu plus professionnel que le site actuel).
 
 ## Périmètre technique
 
