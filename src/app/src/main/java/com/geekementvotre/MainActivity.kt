@@ -10,6 +10,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.geekementvotre.ui.screens.HomeScreen
 import com.geekementvotre.ui.theme.GeekementvotreTheme
 
 class MainActivity : ComponentActivity() {
@@ -26,12 +27,4 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}
-
-@Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
-    Text(
-        text = "Bienvenue sur Geekement Votre !",
-        modifier = modifier
-    )
 }
