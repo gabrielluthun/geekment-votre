@@ -1,1 +1,19 @@
-.idea
+# --- Android / Gradle ---
+**/build/
+**/.gradle/
+**/local.properties
+**/captures/
+**/.externalNativeBuild/
+**/.cxx/
+
+# --- IDE (Android Studio / IntelliJ) ---
+**/.idea/
+**/*.iml
+**/.navigation/
+
+# --- OS ---
+.DS_Store
+**/Thumbs.db
+
+# --- Java ---
+*.class
