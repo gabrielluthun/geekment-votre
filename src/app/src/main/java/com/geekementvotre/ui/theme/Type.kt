@@ -1,4 +1,4 @@
-package com.example.geekement_votre.ui.theme
+package com.geekementvotre.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

@@ -1,4 +1,4 @@
-package com.example.geekement_votre
+package com.geekementvotre
 
 import org.junit.Test
 
