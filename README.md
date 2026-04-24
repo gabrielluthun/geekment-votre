@@ -5,36 +5,37 @@ Application mobile **Android** pour un prestataire de **jeux de rôle** (MJ à d
 ## Objectif produit
 
 - Mettre en avant l’activité et l’expérience du client, avec le logo de la marque.
-- Convertir : contact, réservation de créneaux (lien avec **Google Agenda**), achat de produits (**PayPal** en priorité, **Stripe** en secours), participation au financement via **redirection web** (pas de paiement crowdfunding in-app).
-- Interface **mobile-first**, alignée sur la charte du site [geekementvotre.fr](https://www.geekementvotre.fr), mais peut être améliorée (objectif : rendu plus professionnel que le site actuel).
+- Convertir : contact, réservation de créneaux (lien avec **Google Agenda**), achat de produits (**PayPal** en priorité, **Stripe** en secours), participation au financement via **redirection web**.
+- Interface **mobile-first**, alignée sur la charte du site [geekementvotre.fr](https://www.geekementvotre.fr).
 
 ## Périmètre technique
 
 | Élément | Choix documenté |
 |--------|------------------|
-| Plateforme | **Android uniquement** (pas d’iOS dans le périmètre initial) |
-| Front mobile | **Kotlin natif** (recommandation principale dans `doc/etude-stack/front.md`) |
-| Publication | Cible **Google Play** (pas d’App Store prévu dans les contraintes budgétaires) |
-
-Le code applicatif n’est pas encore initialisé dans ce dépôt : les dossiers `src/` et `public/` sont des emplacements réservés.
+| Plateforme | **Android** |
+| Front mobile | **Kotlin natif** (Jetpack Compose) |
+| Back-end | **Supabase** (PostgreSQL, Auth, Edge Functions) |
+| Déploiement | SQL script déployé sur Supabase |
 
 ## Structure du dépôt
 
 ```
 ├── doc/
-│   ├── contraintes.md          # contraintes techniques, financières, design, fonctionnelles
-│   ├── regles-de-gestion.md    # règles métier (boutique, JDR, réservation, crowdfunding)
+│   ├── bdd/                    # Modélisation (MCD, MLD, MPD) et fichiers source
+│   ├── contraintes.md          # Contraintes techniques, financières, design, fonctionnelles
+│   ├── regles-de-gestion.md    # Règles métier (boutique, JDR, réservation, crowdfunding)
 │   ├── etude-stack/
-│   │   └── front.md            # comparatif Flutter / Kotlin / React Native et choix Kotlin
-│   └── maquette/               # maquettes écran (PNG)
-├── public/                     # assets statiques (à définir)
-├── src/                        # code source (à initialiser)
+│   │   ├── front.md            # Choix de Kotlin
+│   │   └── back.md             # Choix de Supabase
+│   └── maquette/               # Maquettes écran (PNG)
+├── public/                     # Assets statiques
+├── src/                        # Code source (Android Studio Project)
 └── README.md
 ```
 
 ## Documentation utile
 
-- **`doc/contraintes.md`** — intégrations (Agenda, PayPal, Stripe), crowdfunding par lien, charte graphique, etc.
-- **`doc/regles-de-gestion.md`** — détail des fonctionnalités (onglets footer, boutique sans compte obligatoire avec email / facturation, formulaire de réservation JDR, etc.).
-- **`doc/etude-stack/front.md`** — justification du choix **Kotlin** pour le front Android.
-
+- **`doc/bdd/`** — Modélisation de la base de données (MCD v1.0.0, MPD).
+- **`doc/etude-stack/back.md`** — Justification du choix **Supabase** et architecture backend.
+- **`doc/contraintes.md`** — Intégrations (Agenda, PayPal, Stripe), charte graphique.
+- **`doc/regles-de-gestion.md`** — Détail des fonctionnalités métier.
