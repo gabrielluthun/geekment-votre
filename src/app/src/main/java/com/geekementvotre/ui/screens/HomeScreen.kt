@@ -33,6 +33,7 @@ import com.geekementvotre.ui.components.PrestationCard
 import com.geekementvotre.ui.theme.GeekBlack
 import com.geekementvotre.ui.theme.GeekGold
 import com.geekementvotre.ui.theme.GeekWhite
+import com.geekementvotre.ui.theme.PlayfairDisplayFontFamily
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
@@ -63,6 +64,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             text = "GEEKEMENT VÔTRE",
             color = GeekWhite,
             fontSize = 32.sp,
+            fontFamily = PlayfairDisplayFontFamily,
             fontWeight = FontWeight.ExtraBold,
             textAlign = TextAlign.Center
         )
