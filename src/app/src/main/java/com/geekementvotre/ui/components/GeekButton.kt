@@ -27,26 +27,44 @@ fun GeekButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    isOutlined: Boolean = false
 ) {
-    Button(
-        onClick = onClick,
-        modifier = modifier
-            .height(56.dp), // Hauteur standard pour un bouton mobile confortable
-        enabled = enabled,
-        shape = RoundedCornerShape(28.dp), // Bords très arrondis comme sur la maquette
-        colors = ButtonDefaults.buttonColors(
-            containerColor = GeekGold,    // Fond doré
-            contentColor = GeekBlack,      // Texte noir
-            disabledContainerColor = GeekGold.copy(alpha = 0.5f),
-            disabledContentColor = GeekBlack.copy(alpha = 0.5f)
-        )
-    ) {
-        Text(
-            text = text.uppercase(),
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
-            letterSpacing = 1.sp
-        )
+    if (isOutlined) {
+        androidx.compose.material3.OutlinedButton(
+            onClick = onClick,
+            modifier = modifier.height(48.dp),
+            enabled = enabled,
+            shape = RoundedCornerShape(24.dp),
+            border = androidx.compose.foundation.BorderStroke(1.dp, GeekGold),
+            colors = ButtonDefaults.outlinedButtonColors(
+                contentColor = GeekGold
+            )
+        ) {
+            Text(
+                text = text,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 0.5.sp
+            )
+        }
+    } else {
+        Button(
+            onClick = onClick,
+            modifier = modifier.height(48.dp),
+            enabled = enabled,
+            shape = RoundedCornerShape(24.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = GeekGold,
+                contentColor = GeekBlack
+            )
+        ) {
+            Text(
+                text = text,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 0.5.sp
+            )
+        }
     }
 }
