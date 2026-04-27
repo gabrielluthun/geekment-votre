@@ -12,6 +12,7 @@ val GeekDarkGray = Color(0xFF1A1A1A)   // Fond des cartes (existant, à ajuster 
 // Couleurs pour les modals (Gradient)
 val GeekModalStart = Color(0xFF805BA3)
 val GeekModalEnd = Color(0xFF17171D)
+val GeekFooter = Color(0xFF18161A)
 
 // Couleurs par défaut de Material3 (on les adapte)
 val Purple80 = Color(0xFFD0BCFF)
