@@ -47,7 +47,9 @@ fun Footer(
 
     Surface(
         color = GeekFooter,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .navigationBarsPadding() 
     ) {
         Column {
             // Ligne de séparation très fine en haut du footer (optionnelle, selon la maquette)
