@@ -10,6 +10,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.geekementvotre.ui.components.Footer
 import com.geekementvotre.ui.screens.HomeScreen
 import com.geekementvotre.ui.theme.GeekementvotreTheme
 
@@ -19,7 +20,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             GeekementvotreTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    bottomBar = { Footer() }
+                ) { innerPadding ->
                     HomeScreen(
                         modifier = Modifier.padding(innerPadding)
                     )
