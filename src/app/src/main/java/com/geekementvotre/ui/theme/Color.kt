@@ -3,7 +3,7 @@ package com.geekementvotre.ui.theme
 import androidx.compose.ui.graphics.Color
 
 // Palette Geekement Votre
-val GeekBlack = Color(0xFF0E0E11)      // Fond principal
+val GeekBlack = Color(0xFF161618)      // Fond principal (un peu moins dur que 0E0E11)
 val GeekWhite = Color(0xFFFFFFFF)      // Texte principal
 val GeekGold = Color(0xFFFBBD23)       // Couleur d'accent (Boutons, Titres)
 val GeekSubtitle = Color(0xFFB1B1C6)   // Couleur pour les sous-titres
