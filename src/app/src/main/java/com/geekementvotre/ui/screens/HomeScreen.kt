@@ -34,16 +34,13 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // --- LOGO ---
-        // TODO: Ajouter l'image du logo dans les ressources (res/drawable)
-        Box(
+        Image(
+            painter = painterResource(id = com.geekementvotre.R.drawable.logo_geekement_votre),
+            contentDescription = "Logo Geekement Vôtre",
             modifier = Modifier
-                .size(150.dp)
-                .padding(top = 24.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            // Placeholder pour le logo en attendant l'image réelle
-            Text("LOGO", color = GeekGold, fontWeight = FontWeight.Bold)
-        }
+                .size(200.dp)
+                .padding(top = 24.dp)
+        )
 
         Spacer(modifier = Modifier.height(24.dp))
 
