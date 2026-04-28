@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -19,6 +21,17 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Lecture du fichier secrets.properties (plus sûr que local.properties)
+        val secretsProperties = Properties()
+        val secretsPropertiesFile = rootProject.file("secrets.properties")
+        if (secretsPropertiesFile.exists()) {
+            secretsProperties.load(secretsPropertiesFile.inputStream())
+        }
+
+        // Injection des clés dans BuildConfig
+        buildConfigField("String", "SUPABASE_URL", "\"${secretsProperties.getProperty("supabase.url") ?: ""}\"")
+        buildConfigField("String", "SUPABASE_ANON_KEY", "\"${secretsProperties.getProperty("supabase.anon_key") ?: ""}\"")
     }
 
     buildTypes {
@@ -36,6 +49,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
