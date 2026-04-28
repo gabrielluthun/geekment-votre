@@ -16,7 +16,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.geekementvotre.ui.components.Footer
-import com.geekementvotre.ui.screens.HomeScreen
+import com.geekementvotre.ui.screens.Home
+import com.geekementvotre.ui.screens.Shop
 import com.geekementvotre.ui.theme.GeekementvotreTheme
 
 class MainActivity : ComponentActivity() {
@@ -42,12 +43,9 @@ class MainActivity : ComponentActivity() {
                         label = "MainNavigation"
                     ) { route ->
                         when (route) {
-                            "accueil" -> HomeScreen()
-                            "boutique" -> {
-                                // Placeholder pour l'instant
-                                Text("Page Boutique en cours de création...")
-                            }
-                            else -> HomeScreen()
+                            "accueil" -> Home()
+                            "boutique" -> Shop()
+                            else -> Home()
                         }
                     }
                 }

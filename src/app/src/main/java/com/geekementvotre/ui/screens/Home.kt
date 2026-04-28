@@ -36,7 +36,7 @@ import com.geekementvotre.ui.theme.GeekWhite
 import com.geekementvotre.ui.theme.PlayfairDisplayFontFamily
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
+fun Home(modifier: Modifier = Modifier) {
     val scrollState = rememberScrollState()
 
     BoxWithConstraints(
