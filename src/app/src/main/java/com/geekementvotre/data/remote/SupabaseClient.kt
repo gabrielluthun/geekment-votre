@@ -1,5 +1,6 @@
 package com.geekementvotre.data.remote
 
+import com.geekementvotre.BuildConfig
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.storage.Storage

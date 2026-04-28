@@ -11,16 +11,17 @@ class ProductRepository {
 
     suspend fun getProducts(): List<Product> = withContext(Dispatchers.IO) {
         try {
-            val result = SupabaseClient.client.postgrest["products"]
+            val result = SupabaseClient.client.postgrest["goodie"]
                 .select()
                 .decodeList<ProductDto>()
 
             result.map { it.toDomain() }
         } catch (e: Exception) {
-            emptyList() // Gestion d'erreur simplifiée pour le moment
+            // Loggez l'erreur pour faciliter le débogage
+            android.util.Log.e("ProductRepository", "Erreur lors de la récupération des produits", e)
+            emptyList()
         }
     }
-
     private fun ProductDto.toDomain(): Product {
         return Product(
             id = id,
