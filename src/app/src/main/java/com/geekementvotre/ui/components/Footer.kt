@@ -1,7 +1,12 @@
 package com.geekementvotre.ui.components
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
@@ -13,8 +18,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
@@ -64,31 +72,59 @@ fun Footer(
             ) {
                 items.forEach { item ->
                     val selected = currentRoute == item.route
+                    
+                    // Animations de couleur
+                    val contentColor by animateColorAsState(
+                        targetValue = if (selected) GeekGold else GeekWhite.copy(alpha = 0.4f),
+                        animationSpec = tween(durationMillis = 300),
+                        label = "ContentColor"
+                    )
+
+                    // Animation de la barre de sélection (largeur)
+                    val indicatorWidth by animateDpAsState(
+                        targetValue = if (selected) 32.dp else 0.dp,
+                        animationSpec = tween(durationMillis = 300),
+                        label = "IndicatorWidth"
+                    )
+
+                    // Animation d'échelle pour l'icône
+                    val iconScale by animateFloatAsState(
+                        targetValue = if (selected) 1.15f else 1.0f,
+                        animationSpec = tween(durationMillis = 300),
+                        label = "IconScale"
+                    )
+
                     Column(
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxHeight()
-                            .clickable { onNavigate(item.route) },
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null, // On retire l'effet ripple gris par défaut pour plus de propreté
+                                onClick = { onNavigate(item.route) }
+                            ),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.SpaceBetween
                     ) {
-                        // La barre dorée de sélection tout en haut
+                        // La barre dorée de sélection animée
                         Box(
                             modifier = Modifier
-                                .width(32.dp) // Barre plus courte, centrée
+                                .width(indicatorWidth)
                                 .height(3.dp)
-                                .background(if (selected) GeekGold else Color.Transparent)
+                                .background(GeekGold)
                         )
                         
                         Column(
-                            modifier = Modifier.weight(1f),
+                            modifier = Modifier
+                                .weight(1f)
+                                .scale(iconScale),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center
                         ) {
                             Icon(
                                 imageVector = item.icon,
                                 contentDescription = item.label,
-                                tint = if (selected) GeekGold else GeekWhite.copy(alpha = 0.5f),
+                                tint = contentColor,
                                 modifier = Modifier.size(22.dp)
                             )
                             
@@ -99,11 +135,10 @@ fun Footer(
                                 fontSize = 9.sp,
                                 fontFamily = MontserratFontFamily,
                                 fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
-                                color = if (selected) GeekGold else GeekWhite.copy(alpha = 0.5f)
+                                color = contentColor
                             )
                         }
                         
-                        // Petit spacer en bas pour l'équilibre
                         Spacer(modifier = Modifier.height(4.dp))
                     }
                 }
