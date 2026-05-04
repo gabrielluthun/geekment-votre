@@ -7,8 +7,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.draw.clip
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.MenuBook
+import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -132,6 +136,95 @@ fun TerresAmbre(modifier: Modifier = Modifier) {
             }
 
             Spacer(modifier = Modifier.height(48.dp))
+
+            // --- SECTION POURQUOI SOUTENIR ---
+            Text(
+                text = "POURQUOI SOUTENIR ?",
+                color = GeekWhite,
+                fontSize = 28.sp,
+                fontFamily = PlayfairDisplayFontFamily,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+            Text(
+                text = "Un projet porté unanimement",
+                color = GeekWhite.copy(alpha = 0.6f),
+                fontSize = 14.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                ReasonCard(
+                    icon = Icons.AutoMirrored.Filled.MenuBook,
+                    title = "UN UNIVERS ORIGINAL",
+                    description = "Partez pour un monde fantasy riche, face à ses mythes et dangers"
+                )
+                ReasonCard(
+                    icon = Icons.Default.LocationOn,
+                    title = "AVENTURES MODULAIRES",
+                    description = "Campagne complexe ou scénario one-shot, vous choisissez votre destin"
+                )
+                ReasonCard(
+                    icon = Icons.Default.AutoAwesome,
+                    title = "IMMERSION TOTALE",
+                    description = "Livre de règles illustré, cartes, fiche de personnages... L'immersion est garantie"
+                )
+            }
+
+            Spacer(modifier = Modifier.height(64.dp))
+        }
+    }
+}
+
+@Composable
+private fun ReasonCard(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    title: String,
+    description: String
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(GeekWhite.copy(alpha = 0.05f))
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .size(48.dp)
+                .background(GeekWhite.copy(alpha = 0.05f), RoundedCornerShape(8.dp))
+                .border(1.dp, GeekGold.copy(alpha = 0.2f), RoundedCornerShape(8.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = GeekGold,
+                modifier = Modifier.size(24.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Column {
+            Text(
+                text = title,
+                color = GeekWhite,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 0.5.sp
+            )
+            Text(
+                text = description,
+                color = GeekWhite.copy(alpha = 0.5f),
+                fontSize = 13.sp,
+                lineHeight = 18.sp,
+                modifier = Modifier.padding(top = 4.dp)
+            )
         }
     }
 }
