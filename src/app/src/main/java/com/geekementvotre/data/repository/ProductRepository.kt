@@ -17,7 +17,6 @@ class ProductRepository {
 
             result.map { it.toDomain() }
         } catch (e: Exception) {
-            // Loggez l'erreur pour faciliter le débogage
             android.util.Log.e("ProductRepository", "Erreur lors de la récupération des produits", e)
             emptyList()
         }
