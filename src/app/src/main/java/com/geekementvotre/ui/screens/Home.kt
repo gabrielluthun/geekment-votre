@@ -111,7 +111,7 @@ fun Home(
                     modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    GeekButton(text = "Réserver", onClick = { }, modifier = Modifier.fillMaxWidth())
+                    GeekButton(text = "Réserver", onClick = { onNavigate("reservation") }, modifier = Modifier.fillMaxWidth())
                     GeekButton(text = "Me contacter", onClick = { }, modifier = Modifier.fillMaxWidth(), isOutlined = true)
                 }
             } else {
@@ -119,7 +119,7 @@ fun Home(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    GeekButton(text = "Réserver", onClick = { }, modifier = Modifier.weight(1f))
+                    GeekButton(text = "Réserver", onClick = { onNavigate("reservation") }, modifier = Modifier.weight(1f))
                     GeekButton(text = "Me contacter", onClick = { }, modifier = Modifier.weight(1f), isOutlined = true)
                 }
             }
@@ -168,7 +168,7 @@ fun Home(
 
                 PrestationCard(
                     title = "MJ À DOMICILE",
-                    description = "Déplacement chez vous pour des sessions de JDR sur-mesure, du simple one-shot aux longues campagnes...",
+                    description = "Déplacement chez vous pour des sesssions de JDR sur-mesure, du simple one-shot au longues compagnes...",
                     icon = Icons.Default.Casino,
                     fontFamily = PlayfairDisplayFontFamily
                 )
@@ -225,7 +225,7 @@ fun Home(
                     Spacer(modifier = Modifier.height(24.dp))
                     
                     Button(
-                        onClick = { onNavigate("terres_ambre") },
+                        onClick = { /* Action */ },
                         colors = ButtonDefaults.buttonColors(containerColor = GeekGold),
                         shape = RoundedCornerShape(12.dp),
                         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
