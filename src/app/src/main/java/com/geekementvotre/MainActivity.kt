@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import com.geekementvotre.ui.components.Footer
 import com.geekementvotre.ui.screens.Home
 import com.geekementvotre.ui.screens.Shop
+import com.geekementvotre.ui.screens.TerresAmbre
 import com.geekementvotre.ui.theme.GeekementvotreTheme
 
 class MainActivity : ComponentActivity() {
@@ -43,6 +44,7 @@ class MainActivity : ComponentActivity() {
                         when (route) {
                             "accueil" -> Home()
                             "boutique" -> Shop()
+                            "terres_ambre" -> TerresAmbre()
                             else -> Home()
                         }
                     }
