@@ -42,10 +42,10 @@ class MainActivity : ComponentActivity() {
                         label = "MainNavigation"
                     ) { route ->
                         when (route) {
-                            "accueil" -> Home()
+                            "accueil" -> Home(onNavigate = { currentRoute = it })
                             "boutique" -> Shop()
                             "terres_ambre" -> TerresAmbre()
-                            else -> Home()
+                            else -> Home(onNavigate = { currentRoute = it })
                         }
                     }
                 }
