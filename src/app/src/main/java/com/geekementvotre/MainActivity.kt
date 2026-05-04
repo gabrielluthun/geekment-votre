@@ -15,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.geekementvotre.ui.components.Footer
 import com.geekementvotre.ui.screens.Home
+import com.geekementvotre.ui.screens.Reservation
 import com.geekementvotre.ui.screens.Shop
 import com.geekementvotre.ui.screens.TerresAmbre
 import com.geekementvotre.ui.theme.GeekementvotreTheme
@@ -45,6 +46,7 @@ class MainActivity : ComponentActivity() {
                             "accueil" -> Home(onNavigate = { currentRoute = it })
                             "boutique" -> Shop()
                             "terres_ambre" -> TerresAmbre()
+                            "reservation" -> Reservation(onBack = { currentRoute = "accueil" })
                             else -> Home(onNavigate = { currentRoute = it })
                         }
                     }
