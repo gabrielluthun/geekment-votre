@@ -159,19 +159,22 @@ fun Home(modifier: Modifier = Modifier) {
                 PrestationCard(
                     title = "ANIMATION ÉVÉNEMENTIEL",
                     description = "Quizz, animation cosplay, et ambiance mémorable pour vos conventions.",
-                    icon = Icons.Default.TheaterComedy
+                    icon = Icons.Default.TheaterComedy,
+                    fontFamily = PlayfairDisplayFontFamily
                 )
 
                 PrestationCard(
                     title = "MJ À DOMICILE",
                     description = "Déplacement chez vous pour des sesssions de JDR sur-mesure, du simple one-shot au longues compagnes...",
-                    icon = Icons.Default.Casino
+                    icon = Icons.Default.Casino,
+                    fontFamily = PlayfairDisplayFontFamily
                 )
 
                 PrestationCard(
                     title = "POUR QUI ?",
                     description = "• Débutants : pour une découverte\n• Familles : pour une soirée originale\n• Confirmés : pour de la complexité",
-                    icon = Icons.Default.Groups
+                    icon = Icons.Default.Groups,
+                    fontFamily = PlayfairDisplayFontFamily
                 )
             }
 
