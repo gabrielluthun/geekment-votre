@@ -2,11 +2,8 @@ package com.geekementvotre.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -15,10 +12,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -26,24 +20,18 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.geekementvotre.R
-import com.geekementvotre.ui.components.DateOfBirthField
+import com.geekementvotre.ui.components.*
 import com.geekementvotre.ui.theme.*
+import com.geekementvotre.viewmodels.ReservationViewModel
 
 @Composable
-fun ReservationScreen(onBack: () -> Unit) {
-    // États - Vos Informations
-    var nom by remember { mutableStateOf("") }
-    var prenom by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var dateDeNaissance by remember { mutableStateOf("") }
-    var genre by remember { mutableStateOf("") }
-
-    // États - Détails de la Session (Préparation pour la suite)
-    var dateSession by remember { mutableStateOf("") }
-    var nombreJoueurs by remember { mutableStateOf("") }
-    var creneauHoraire by remember { mutableStateOf("") }
-    var typeJeu by remember { mutableStateOf("") }
+fun ReservationScreen(
+    onBack: () -> Unit,
+    viewModel: ReservationViewModel = viewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
 
     Column(
         modifier = Modifier
@@ -57,17 +45,26 @@ fun ReservationScreen(onBack: () -> Unit) {
 
         Spacer(modifier = Modifier.height(32.dp))
 
+        // Section : Informations Personnelles
         PersonalInformationSection(
-            nom = nom,
-            onNomChange = { nom = it },
-            prenom = prenom,
-            onPrenomChange = { prenom = it },
-            email = email,
-            onEmailChange = { email = it },
-            dateDeNaissance = dateDeNaissance,
-            onDateDeNaissanceChange = { dateDeNaissance = it },
-            genre = genre,
-            onGenreChange = { genre = it }
+            uiState = uiState,
+            onNomChange = viewModel::updateNom,
+            onPrenomChange = viewModel::updatePrenom,
+            onEmailChange = viewModel::updateEmail,
+            onDateDeNaissanceChange = viewModel::updateDateDeNaissance,
+            onGenreChange = viewModel::updateGenre
+        )
+
+        Spacer(modifier = Modifier.height(40.dp))
+
+        // Bouton de validation (activé seulement si les informations client sont complètes et valides)
+        GeekButton(
+            text = "CONTINUER",
+            onClick = { /* Prochaine étape ou action */ },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            enabled = uiState.canSubmit
         )
     }
 }
@@ -86,7 +83,7 @@ private fun ReservationHeader() {
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            text = "RÉSERVER UNE SESSION",
+            text = "VOTRE RÉSERVATION",
             style = MaterialTheme.typography.displaySmall.copy(
                 fontFamily = PlayfairDisplayFontFamily,
                 fontWeight = FontWeight.Bold,
@@ -97,7 +94,7 @@ private fun ReservationHeader() {
         )
 
         Text(
-            text = "Uniquement dédié au JDR !",
+            text = "Pour réserver un JDR, c'est ici !",
             style = MaterialTheme.typography.bodyMedium.copy(
                 fontFamily = PlayfairDisplayFontFamily,
                 fontStyle = FontStyle.Italic,
@@ -121,23 +118,14 @@ private fun ReservationHeader() {
 
 @Composable
 private fun PersonalInformationSection(
-    nom: String,
+    uiState: com.geekementvotre.viewmodels.ReservationUiState,
     onNomChange: (String) -> Unit,
-    prenom: String,
     onPrenomChange: (String) -> Unit,
-    email: String,
     onEmailChange: (String) -> Unit,
-    dateDeNaissance: String,
     onDateDeNaissanceChange: (String) -> Unit,
-    genre: String,
     onGenreChange: (String) -> Unit
 ) {
-    val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$".toRegex()
-    val isEmailError by remember(email) {
-        derivedStateOf {
-            email.isNotEmpty() && !email.matches(emailRegex)
-        }
-    }
+    val genres = listOf("Masculin", "Féminin", "Non-binaire", "Autre")
 
     ReservationSection(
         icon = Icons.Outlined.Person,
@@ -146,14 +134,14 @@ private fun PersonalInformationSection(
         Row(modifier = Modifier.fillMaxWidth()) {
             CustomTextField(
                 label = "*Nom",
-                value = nom,
+                value = uiState.nom,
                 onValueChange = onNomChange,
                 modifier = Modifier.weight(1f)
             )
             Spacer(modifier = Modifier.width(16.dp))
             CustomTextField(
                 label = "*Prénom",
-                value = prenom,
+                value = uiState.prenom,
                 onValueChange = onPrenomChange,
                 modifier = Modifier.weight(1f)
             )
@@ -163,131 +151,29 @@ private fun PersonalInformationSection(
 
         CustomTextField(
             label = "*Email",
-            value = email,
+            value = uiState.email,
             onValueChange = onEmailChange,
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-            isError = isEmailError
+            isError = !uiState.isEmailValid
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Row(modifier = Modifier.fillMaxWidth()) {
             DateOfBirthField(
-                value = dateDeNaissance,
+                value = uiState.dateDeNaissance,
                 onDateSelected = onDateDeNaissanceChange,
                 modifier = Modifier.weight(1.2f)
             )
             Spacer(modifier = Modifier.width(16.dp))
-            CustomTextField(
+            CustomDropdownField(
                 label = "Genre",
-                value = genre,
+                selectedValue = uiState.genre,
+                options = genres,
                 onValueChange = onGenreChange,
                 modifier = Modifier.weight(1f)
             )
         }
-    }
-}
-
-@Composable
-fun ReservationSection(
-    icon: ImageVector,
-    title: String,
-    content: @Composable ColumnScope.() -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .background(Color(0xFF141416)) // Gris très sombre pour la carte
-            .padding(24.dp)
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(bottom = 24.dp)
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = GeekGold,
-                modifier = Modifier.size(24.dp)
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontFamily = PlayfairDisplayFontFamily,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White,
-                    letterSpacing = 1.sp
-                )
-            )
-        }
-
-        content()
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Text(
-            text = "*Champ obligatoire",
-            style = MaterialTheme.typography.labelSmall.copy(
-                fontStyle = FontStyle.Italic,
-                color = GeekSubtitle.copy(alpha = 0.7f)
-            )
-        )
-    }
-}
-
-@Composable
-fun CustomTextField(
-    label: String,
-    value: String,
-    onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    placeholder: String? = null,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    isError: Boolean = false
-) {
-    Column(modifier = modifier) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.labelMedium.copy(
-                color = if (isError) Color(0xFFE57373) else GeekSubtitle,
-                fontWeight = FontWeight.Medium
-            ),
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        BasicTextField(
-            value = value,
-            onValueChange = onValueChange,
-            textStyle = MaterialTheme.typography.bodyMedium.copy(color = Color.White),
-            cursorBrush = SolidColor(GeekGold),
-            keyboardOptions = keyboardOptions,
-            decorationBox = { innerTextField ->
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(44.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(Color(0xFF2C2C2E)) // Couleur des champs
-                        .then(
-                            if (isError) Modifier.border(1.dp, Color(0xFFE57373), RoundedCornerShape(8.dp))
-                            else Modifier
-                        )
-                        .padding(horizontal = 12.dp),
-                    contentAlignment = Alignment.CenterStart
-                ) {
-                    if (value.isEmpty() && placeholder != null) {
-                        Text(
-                            text = placeholder,
-                            color = GeekSubtitle.copy(alpha = 0.5f),
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
-                    innerTextField()
-                }
-            }
-        )
     }
 }
