@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -160,21 +161,138 @@ fun TerresAmbre(modifier: Modifier = Modifier) {
                 ReasonCard(
                     icon = Icons.AutoMirrored.Filled.MenuBook,
                     title = "UN UNIVERS ORIGINAL",
+                    fontFamily = PlayfairDisplayFontFamily,
+                    fontWeight = FontWeight.Bold,
                     description = "Partez pour un monde fantasy riche, face à ses mythes et dangers"
                 )
                 ReasonCard(
                     icon = Icons.Default.LocationOn,
                     title = "AVENTURES MODULAIRES",
+                    fontFamily = PlayfairDisplayFontFamily,
+                    fontWeight = FontWeight.Bold,
                     description = "Campagne complexe ou scénario one-shot, vous choisissez votre destin"
                 )
                 ReasonCard(
                     icon = Icons.Default.AutoAwesome,
                     title = "IMMERSION TOTALE",
+                    fontFamily = PlayfairDisplayFontFamily,
+                    fontWeight = FontWeight.Bold,
                     description = "Livre de règles illustré, cartes, fiche de personnages... L'immersion est garantie"
                 )
             }
 
             Spacer(modifier = Modifier.height(64.dp))
+
+            // --- SECTION L'UNIVERS ---
+            Text(
+                text = "L'UNIVERS",
+                color = GeekWhite,
+                fontSize = 28.sp,
+                fontFamily = PlayfairDisplayFontFamily,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+            Text(
+                text = "Petit aperçu...",
+                color = GeekWhite.copy(alpha = 0.6f),
+                fontSize = 14.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Petit trait doré
+            Box(
+                modifier = Modifier
+                    .width(80.dp)
+                    .height(1.dp)
+                    .background(GeekGold)
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // Carte Univers
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(
+                        width = 1.dp,
+                        color = GeekGold.copy(alpha = 0.5f),
+                        shape = RoundedCornerShape(20.dp)
+                    )
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(Color(0xFF2D1E3D), Color(0xFF1A1A1A))
+                        ),
+                        shape = RoundedCornerShape(20.dp)
+                    )
+                    .padding(32.dp)
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Spacer(modifier = Modifier.height(60.dp))
+
+                    Text(
+                        text = "(insérer description, inconnue\npour l'instant)",
+                        color = GeekWhite.copy(alpha = 0.4f),
+                        fontSize = 14.sp,
+                        textAlign = TextAlign.Center,
+                        lineHeight = 20.sp
+                    )
+
+                    Spacer(modifier = Modifier.height(60.dp))
+
+                    Text(
+                        text = "• PROLOGUE DES TERRES D'AMBRE",
+                        color = GeekGold,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.align(Alignment.End)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(64.dp))
+
+            // --- CONCLUSION & CTA ---
+            Text(
+                text = "Chaque contribution compte à la\nvie du projet !",
+                color = GeekWhite.copy(alpha = 0.8f),
+                fontSize = 14.sp,
+                textAlign = TextAlign.Center,
+                lineHeight = 20.sp
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Button(
+                onClick = { /* Action Financement */ },
+                colors = ButtonDefaults.buttonColors(containerColor = GeekGold),
+                shape = RoundedCornerShape(12.dp),
+                contentPadding = PaddingValues(horizontal = 24.dp, vertical = 14.dp),
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .padding(bottom = 40.dp)
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        "Participer au financement",
+                        color = GeekBlack,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 15.sp
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Icon(
+                        Icons.AutoMirrored.Filled.ArrowForward,
+                        contentDescription = null,
+                        tint = GeekBlack,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+            }
         }
     }
 }
@@ -183,7 +301,9 @@ fun TerresAmbre(modifier: Modifier = Modifier) {
 private fun ReasonCard(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     title: String,
-    description: String
+    description: String,
+    fontFamily: FontFamily? = null,
+    fontWeight: FontWeight = FontWeight.Bold
 ) {
     Row(
         modifier = Modifier
@@ -215,7 +335,8 @@ private fun ReasonCard(
                 text = title,
                 color = GeekWhite,
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
+                fontFamily = fontFamily,
+                fontWeight = fontWeight,
                 letterSpacing = 0.5.sp
             )
             Text(
