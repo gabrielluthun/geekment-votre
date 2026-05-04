@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -21,7 +22,9 @@ fun PrestationCard(
     title: String,
     description: String,
     icon: ImageVector,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    fontFamily: FontFamily? = null,
+    fontWeight: FontWeight = FontWeight.Bold
 ) {
     Row(
         modifier = modifier
@@ -49,20 +52,20 @@ fun PrestationCard(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.titleMedium,
                 color = GeekWhite,
-                fontWeight = FontWeight.Bold,
-                fontSize = 15.sp
+                fontFamily = fontFamily,
+                fontWeight = fontWeight,
+                fontSize = 18.sp,
+                letterSpacing = 0.5.sp
             )
-            
-            Spacer(modifier = Modifier.height(4.dp))
             
             Text(
                 text = description,
-                style = MaterialTheme.typography.bodyMedium,
-                color = GeekWhite.copy(alpha = 0.7f),
-                fontSize = 12.sp,
-                lineHeight = 16.sp
+                color = GeekWhite.copy(alpha = 0.5f),
+                fontSize = 13.sp,
+                lineHeight = 18.sp,
+                letterSpacing = 1.sp,
+                modifier = Modifier.padding(top = 4.dp)
             )
         }
     }
