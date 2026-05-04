@@ -36,7 +36,10 @@ import com.geekementvotre.ui.theme.GeekWhite
 import com.geekementvotre.ui.theme.PlayfairDisplayFontFamily
 
 @Composable
-fun Home(modifier: Modifier = Modifier) {
+fun Home(
+    onNavigate: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     val scrollState = rememberScrollState()
 
     BoxWithConstraints(
@@ -165,7 +168,7 @@ fun Home(modifier: Modifier = Modifier) {
 
                 PrestationCard(
                     title = "MJ À DOMICILE",
-                    description = "Déplacement chez vous pour des sesssions de JDR sur-mesure, du simple one-shot au longues compagnes...",
+                    description = "Déplacement chez vous pour des sessions de JDR sur-mesure, du simple one-shot aux longues campagnes...",
                     icon = Icons.Default.Casino,
                     fontFamily = PlayfairDisplayFontFamily
                 )
@@ -222,7 +225,7 @@ fun Home(modifier: Modifier = Modifier) {
                     Spacer(modifier = Modifier.height(24.dp))
                     
                     Button(
-                        onClick = { /* Action */ },
+                        onClick = { onNavigate("terres_ambre") },
                         colors = ButtonDefaults.buttonColors(containerColor = GeekGold),
                         shape = RoundedCornerShape(12.dp),
                         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
