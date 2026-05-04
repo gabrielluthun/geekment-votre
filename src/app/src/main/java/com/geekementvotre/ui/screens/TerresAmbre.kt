@@ -111,7 +111,7 @@ fun TerresAmbre(modifier: Modifier = Modifier) {
                     Spacer(modifier = Modifier.height(40.dp))
 
                     Button(
-                        onClick = { /* Action */ },
+                        onClick = { /* À venir */ },
                         colors = ButtonDefaults.buttonColors(containerColor = GeekGold),
                         shape = RoundedCornerShape(12.dp),
                         contentPadding = PaddingValues(horizontal = 20.dp, vertical = 12.dp),
@@ -119,7 +119,7 @@ fun TerresAmbre(modifier: Modifier = Modifier) {
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
-                                "Découvrir le projet",
+                                "Nous soutenir",
                                 color = GeekBlack,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 14.sp
@@ -269,7 +269,7 @@ fun TerresAmbre(modifier: Modifier = Modifier) {
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = { /* Action Financement */ },
+                onClick = { /* À venir */ },
                 colors = ButtonDefaults.buttonColors(containerColor = GeekGold),
                 shape = RoundedCornerShape(12.dp),
                 contentPadding = PaddingValues(horizontal = 24.dp, vertical = 14.dp),
