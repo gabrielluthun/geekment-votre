@@ -49,7 +49,7 @@ fun Footer(
         FooterNavigationItem("Accueil", Icons.Default.Home, "accueil"),
         FooterNavigationItem("Boutique", Icons.Default.ShoppingBag, "boutique"),
         FooterNavigationItem("Terres d'Ambre", Icons.Default.Shield, "terres_ambre"),
-        FooterNavigationItem("Réserver", Icons.Default.CalendarMonth, "reserver"),
+        FooterNavigationItem("Réserver", Icons.Default.CalendarMonth, "reservation"),
         FooterNavigationItem("Contact", Icons.Default.Email, "contact")
     )
 
