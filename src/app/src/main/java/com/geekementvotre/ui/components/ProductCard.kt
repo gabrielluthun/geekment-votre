@@ -67,7 +67,7 @@ fun ProductCard(
         Text(
             text = category.uppercase(),
             color = GeekGold,
-            fontSize = 10.sp,
+            fontSize = 11.5.sp,
             fontFamily = MontserratFontFamily,
             fontWeight = FontWeight.Bold,
             letterSpacing = 1.sp
@@ -90,15 +90,15 @@ fun ProductCard(
         Text(
             text = description,
             color = GeekWhite.copy(alpha = 0.6f),
-            fontSize = 11.sp,
+            fontSize = 14.sp,
             fontFamily = DMSansFontFamily,
-            lineHeight = 14.sp,
+            lineHeight = 15.sp,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.height(28.dp)
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         // --- PRIX ET BOUTON ---
         Row(
@@ -109,7 +109,7 @@ fun ProductCard(
             Text(
                 text = price,
                 color = GeekGold,
-                fontSize = 16.sp,
+                fontSize = 20.sp,
                 fontFamily = DMSansFontFamily,
                 fontWeight = FontWeight.Bold
             )
@@ -118,13 +118,13 @@ fun ProductCard(
                 onClick = onAddToCart,
                 colors = ButtonDefaults.buttonColors(containerColor = GeekGold),
                 shape = RoundedCornerShape(8.dp),
-                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
-                modifier = Modifier.height(30.dp)
+                contentPadding = PaddingValues(0.dp),
+                modifier = Modifier.size(36.dp)
             ) {
                 Text(
-                    text = "Ajouter au panier",
+                    text = "+",
                     color = GeekBlack,
-                    fontSize = 10.sp,
+                    fontSize = 28.sp,
                     fontFamily = MontserratFontFamily,
                     fontWeight = FontWeight.Bold
                 )
