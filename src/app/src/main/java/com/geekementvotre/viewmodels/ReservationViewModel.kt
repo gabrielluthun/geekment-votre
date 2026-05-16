@@ -12,40 +12,36 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class ReservationUiState(
-    // Informations personnelles
+    // Vos Informations
     val nom: String = "",
     val prenom: String = "",
     val email: String = "",
-    val dateDeNaissance: String = "",
+    val dateNaissance: String = "",
     val genre: String = "",
-    
-    // Sélection JDR
-    val selectedGame: String = "",
-    val nbJoueurs: Int = 1,
-    val niveauExperience: String = "",
-    
-    // Planification
+
+    // Détails de la session
     val selectedDate: String = "",
+    val nbJoueurs: String = "",
     val selectedTime: String = "",
+    val selectedGame: String = "",
+    
+    // Lieu et Message
+    val adresseSession: String = "",
+    val messageSpecifique: String = "",
     
     // État de la soumission
     val isSubmitting: Boolean = false,
     val submissionSuccess: Boolean? = null,
-    val errorMessage: String? = null,
-    
-    // Validation
-    val isEmailValid: Boolean = true
+    val errorMessage: String? = null
 ) {
     val canSubmit: Boolean
-        get() = nom.isNotBlank() && 
-                prenom.isNotBlank() && 
-                email.isNotBlank() && 
-                isEmailValid &&
-                dateDeNaissance.isNotBlank() &&
-                selectedGame.isNotBlank() &&
-                niveauExperience.isNotBlank() &&
-                selectedDate.isNotBlank() &&
-                selectedTime.isNotBlank()
+        get() = nom.isNotBlank() &&
+                prenom.isNotBlank() &&
+                email.isNotBlank() &&
+                selectedDate.isNotBlank() && 
+                nbJoueurs.isNotBlank() && 
+                selectedTime.isNotBlank() && 
+                selectedGame.isNotBlank()
 }
 
 class ReservationViewModel : ViewModel() {
@@ -61,33 +57,15 @@ class ReservationViewModel : ViewModel() {
     }
 
     fun updateEmail(value: String) {
-        val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$".toRegex()
-        _uiState.update { 
-            it.copy(
-                email = value,
-                isEmailValid = value.isEmpty() || value.matches(emailRegex)
-            ) 
-        }
+        _uiState.update { it.copy(email = value) }
     }
 
-    fun updateDateDeNaissance(value: String) {
-        _uiState.update { it.copy(dateDeNaissance = value) }
+    fun updateDateNaissance(value: String) {
+        _uiState.update { it.copy(dateNaissance = value) }
     }
 
     fun updateGenre(value: String) {
         _uiState.update { it.copy(genre = value) }
-    }
-
-    fun updateGame(value: String) {
-        _uiState.update { it.copy(selectedGame = value) }
-    }
-
-    fun updateNbJoueurs(value: Int) {
-        _uiState.update { it.copy(nbJoueurs = value) }
-    }
-
-    fun updateNiveauExperience(value: String) {
-        _uiState.update { it.copy(niveauExperience = value) }
     }
 
     fun updateSelectedDate(value: String) {
@@ -98,7 +76,22 @@ class ReservationViewModel : ViewModel() {
         _uiState.update { it.copy(selectedTime = value) }
     }
 
-// Send to Supabase Data
+    fun updateGame(value: String) {
+        _uiState.update { it.copy(selectedGame = value) }
+    }
+
+    fun updateNbJoueurs(value: String) {
+        _uiState.update { it.copy(nbJoueurs = value) }
+    }
+
+    fun updateAdresseSession(value: String) {
+        _uiState.update { it.copy(adresseSession = value) }
+    }
+
+    fun updateMessageSpecifique(value: String) {
+        _uiState.update { it.copy(messageSpecifique = value) }
+    }
+
     fun submitReservation() {
         val currentState = _uiState.value
         if (!currentState.canSubmit) return
@@ -110,13 +103,14 @@ class ReservationViewModel : ViewModel() {
                     nom = currentState.nom,
                     prenom = currentState.prenom,
                     email = currentState.email,
-                    date_de_naissance = currentState.dateDeNaissance,
+                    date_de_naissance = currentState.dateNaissance,
                     genre = currentState.genre,
-                    selected_game = currentState.selectedGame,
-                    nb_joueurs = currentState.nbJoueurs,
-                    niveau_experience = currentState.niveauExperience,
                     selected_date = currentState.selectedDate,
-                    selected_time = currentState.selectedTime
+                    nb_joueurs = currentState.nbJoueurs.toIntOrNull() ?: 0,
+                    selected_time = currentState.selectedTime,
+                    selected_game = currentState.selectedGame,
+                    adresse_session = currentState.adresseSession.ifBlank { null },
+                    message_specifique = currentState.messageSpecifique.ifBlank { null }
                 )
 
                 SupabaseClient.client.postgrest["reservations"].insert(reservation)
