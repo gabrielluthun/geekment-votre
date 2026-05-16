@@ -14,6 +14,14 @@ data class ReservationUiState(
     val dateDeNaissance: String = "",
     val genre: String = "",
     
+    // Sélection JDR
+    val selectedGame: String = "",
+    val nbJoueurs: Int = 1,
+    
+    // Planification
+    val selectedDate: String = "",
+    val selectedTime: String = "",
+    
     // Validation
     val isEmailValid: Boolean = true
 ) {
@@ -22,7 +30,10 @@ data class ReservationUiState(
                 prenom.isNotBlank() && 
                 email.isNotBlank() && 
                 isEmailValid &&
-                dateDeNaissance.isNotBlank()
+                dateDeNaissance.isNotBlank() &&
+                selectedGame.isNotBlank() &&
+                selectedDate.isNotBlank() &&
+                selectedTime.isNotBlank()
 }
 
 class ReservationViewModel : ViewModel() {
@@ -53,5 +64,21 @@ class ReservationViewModel : ViewModel() {
 
     fun updateGenre(value: String) {
         _uiState.update { it.copy(genre = value) }
+    }
+
+    fun updateGame(value: String) {
+        _uiState.update { it.copy(selectedGame = value) }
+    }
+
+    fun updateNbJoueurs(value: Int) {
+        _uiState.update { it.copy(nbJoueurs = value) }
+    }
+
+    fun updateSelectedDate(value: String) {
+        _uiState.update { it.copy(selectedDate = value) }
+    }
+
+    fun updateSelectedTime(value: String) {
+        _uiState.update { it.copy(selectedTime = value) }
     }
 }
