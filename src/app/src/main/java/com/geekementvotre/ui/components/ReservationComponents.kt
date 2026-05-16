@@ -160,8 +160,11 @@ fun CustomTextField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     placeholder: String? = null,
+    icon: ImageVector? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    isError: Boolean = false
+    isError: Boolean = false,
+    singleLine: Boolean = true,
+    minLines: Int = 1
 ) {
     Column(modifier = modifier) {
         Text(
@@ -178,28 +181,52 @@ fun CustomTextField(
             textStyle = MaterialTheme.typography.bodyMedium.copy(color = Color.White),
             cursorBrush = SolidColor(GeekGold),
             keyboardOptions = keyboardOptions,
+            singleLine = singleLine,
+            minLines = minLines,
             decorationBox = { innerTextField ->
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(44.dp)
+                        .let { 
+                            if (singleLine) it.height(44.dp) 
+                            else it.heightIn(min = 100.dp) 
+                        }
                         .clip(RoundedCornerShape(8.dp))
                         .background(GeekInputBackground)
                         .let { 
-                            if (isError) it.border(1.dp, GeekError, RoundedCornerShape(8.dp)) 
+                            if (isError) it.border(1.dp, GeekError.copy(alpha = 0.5f), RoundedCornerShape(8.dp)) 
                             else it 
                         }
-                        .padding(horizontal = 12.dp),
-                    contentAlignment = Alignment.CenterStart
+                        .padding(horizontal = 12.dp, vertical = if (singleLine) 0.dp else 12.dp),
+                    contentAlignment = if (singleLine) Alignment.CenterStart else Alignment.TopStart
                 ) {
-                    if (value.isEmpty() && placeholder != null) {
-                        Text(
-                            text = placeholder,
-                            color = GeekSubtitle.copy(alpha = 0.5f),
-                            style = MaterialTheme.typography.bodyMedium
-                        )
+                    Row(
+                        verticalAlignment = if (singleLine) Alignment.CenterVertically else Alignment.Top,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        if (icon != null) {
+                            Icon(
+                                imageVector = icon,
+                                contentDescription = null,
+                                tint = if (isError) GeekError.copy(alpha = 0.7f) else GeekGold.copy(alpha = 0.6f),
+                                modifier = Modifier
+                                    .size(18.dp)
+                                    .padding(top = if (singleLine) 0.dp else 2.dp)
+                            )
+                            Spacer(modifier = Modifier.width(10.dp))
+                        }
+                        
+                        Box(modifier = Modifier.weight(1f)) {
+                            if (value.isEmpty() && placeholder != null) {
+                                Text(
+                                    text = placeholder,
+                                    color = GeekSubtitle.copy(alpha = 0.5f),
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+                            innerTextField()
+                        }
                     }
-                    innerTextField()
                 }
             }
         )
