@@ -8,8 +8,8 @@ val GeekWhite = Color(0xFFFFFFFF)      // Texte principal
 val GeekGold = Color(0xFFFBBD23)       // Couleur d'accent (Boutons, Titres)
 val GeekSubtitle = Color(0xFFB1B1C6)   // Couleur pour les sous-titres
 val GeekDarkGray = Color(0xFF1A1A1A)   // Fond des cartes (existant, à ajuster si besoin)
-val GeekCardBackground = Color(0xFF141416)
-val GeekInputBackground = Color(0xFF2C2C2E)
+val GeekCardBackground = Color(0xFF1E1E20)
+val GeekInputBackground = Color(0xFF121214)
 val GeekError = Color(0xFFE57373)
 
 // Couleurs pour les modals (Gradient)
