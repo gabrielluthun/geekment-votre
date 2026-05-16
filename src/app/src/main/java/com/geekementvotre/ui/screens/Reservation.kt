@@ -150,7 +150,7 @@ private fun ReservationHeader() {
         )
 
         Text(
-            text = "Uniquement dédié au JDR !",
+            text = "Uniquement dédié au JDR à domicile !",
             style = MaterialTheme.typography.bodyMedium.copy(
                 fontFamily = PlayfairDisplayFontFamily,
                 fontStyle = FontStyle.Italic,
@@ -209,28 +209,33 @@ private fun PersonalInfoSection(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Row(modifier = Modifier.fillMaxWidth()) {
-            CustomTextField(
-                label = "*E-mail",
-                value = uiState.email,
-                onValueChange = onEmailChange,
-                modifier = Modifier.weight(1.2f),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                icon = Icons.Outlined.Email,
-                isError = uiState.email.isNotEmpty() && !uiState.isEmailValid
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            CustomTextField(
-                label = "Téléphone",
-                value = uiState.telephone,
-                onValueChange = onTelephoneChange,
-                modifier = Modifier.weight(0.8f),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                icon = Icons.Outlined.Phone
-            )
-        }
+        CustomTextField(
+            label = "*E-mail",
+            value = uiState.email,
+            onValueChange = onEmailChange,
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            icon = Icons.Outlined.Email,
+            isError = uiState.email.isNotEmpty() && !uiState.isEmailValid
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
+
+        CustomTextField(
+            label = "Téléphone",
+            value = uiState.telephone,
+            onValueChange = onTelephoneChange,
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+            icon = Icons.Outlined.Phone
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+
+        HorizontalDivider(
+            color = GeekWhite.copy(alpha = 0.1f),
+            thickness = 1.dp,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
 
         Text(
             text = "Adresse de facturation",
@@ -282,7 +287,13 @@ private fun PersonalInfoSection(
                 label = "Date de naissance",
                 value = uiState.dateNaissance,
                 onValueChange = onDateNaissanceChange,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                yearRange = 1920..LocalDate.now().year,
+                selectableDates = object : SelectableDates {
+                    override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                        return utcTimeMillis <= System.currentTimeMillis()
+                    }
+                }
             )
             Spacer(modifier = Modifier.width(16.dp))
             CustomDropdownField(
@@ -313,7 +324,17 @@ private fun SessionDetailsSection(
                 label = "*Date",
                 value = uiState.dateSession,
                 onValueChange = onDateChange,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                yearRange = LocalDate.now().year..LocalDate.now().year + 3,
+                selectableDates = object : SelectableDates {
+                    override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                        val todayUtc = LocalDate.now()
+                            .atStartOfDay(java.time.ZoneOffset.UTC)
+                            .toInstant()
+                            .toEpochMilli()
+                        return utcTimeMillis >= todayUtc
+                    }
+                }
             )
             Spacer(modifier = Modifier.width(16.dp))
             CustomTextField(
@@ -385,9 +406,10 @@ private fun LocationSection(
                 )
             )
             Text(
-                text = "C'est chez moi ! (Utiliser mon adresse)",
+                text = "Utiliser l'adresse de facturation comme adresse de jeu",
                 color = GeekWhite,
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
+                fontSize = 13.sp
             )
         }
 
@@ -435,13 +457,13 @@ private fun LocationSection(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            label = "Un message spécifique ?",
+            label = "Un message spécifique ? Des précisions ?",
             value = uiState.messageDemande,
             onValueChange = onMessageChange,
             modifier = Modifier.fillMaxWidth(),
             singleLine = false,
             minLines = 3,
-            placeholder = "Indiquez ici vos préférences ou questions...",
+            placeholder = "Indiquez ici des détails, questions...",
             icon = Icons.Outlined.ChatBubbleOutline
         )
     }
@@ -453,20 +475,25 @@ fun DatePickerField(
     label: String,
     value: LocalDate?,
     onValueChange: (LocalDate?) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    selectableDates: SelectableDates = DatePickerDefaults.AllDates,
+    yearRange: IntRange = DatePickerDefaults.YearRange
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
-    val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = value?.atStartOfDay(java.time.ZoneId.systemDefault())?.toInstant()?.toEpochMilli()
-    )
 
     if (showDatePicker) {
+        val datePickerState = rememberDatePickerState(
+            initialSelectedDateMillis = value?.atStartOfDay(java.time.ZoneOffset.UTC)?.toInstant()?.toEpochMilli(),
+            selectableDates = selectableDates,
+            yearRange = yearRange
+        )
+
         DatePickerDialog(
             onDismissRequest = { showDatePicker = false },
             confirmButton = {
                 TextButton(onClick = {
                     datePickerState.selectedDateMillis?.let { millis ->
-                        onValueChange(java.time.Instant.ofEpochMilli(millis).atZone(java.time.ZoneId.systemDefault()).toLocalDate())
+                        onValueChange(java.time.Instant.ofEpochMilli(millis).atZone(java.time.ZoneOffset.UTC).toLocalDate())
                     }
                     showDatePicker = false
                 }) {
