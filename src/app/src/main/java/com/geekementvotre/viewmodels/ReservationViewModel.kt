@@ -109,15 +109,15 @@ class ReservationViewModel : ViewModel() {
                     genre = currentState.genre.ifBlank { null }
                 )
 
-                // Utilisation de upsert avec la syntaxe correcte pour postgrest-kt 3.1.2
-                val clientResponse = SupabaseClient.client.postgrest["client"].upsert(
+                SupabaseClient.client.postgrest["client"].upsert(
                     listOf(client),
-                    request = {
-                        onConflict = "email"
-                    }
-                ).decodeSingle<ClientDto>()
+                    request = { onConflict = "email" }
+                )
 
-                val uuidClient = clientResponse.uuid_client ?: throw Exception("Erreur lors de la récupération du client")
+                // On récupère l'UUID du client par un select explicite (plus sûr)
+                val uuidClient = SupabaseClient.client.postgrest["client"].select {
+                    filter { eq("email", currentState.email) }
+                }.decodeSingle<ClientDto>().uuid_client ?: throw Exception("Identifiant client introuvable")
 
                 // 2. Créer la réservation
                 val reservation = ReservationDto(
@@ -136,7 +136,7 @@ class ReservationViewModel : ViewModel() {
 
                 SupabaseClient.client.postgrest["reservation"].insert(reservation)
                 
-                _uiState.update { it.copy(isSubmitting = false, submissionSuccess = true) }
+                _uiState.value = ReservationUiState(submissionSuccess = true)
             } catch (e: Exception) {
                 e.printStackTrace()
                 _uiState.update { 
