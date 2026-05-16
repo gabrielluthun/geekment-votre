@@ -14,14 +14,14 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ProductFromSupabase(
     @SerialName("uuid_goodie")
-    val id: String,
+    val id: String? = null,
     @SerialName("nom")
-    val name: String,
-    val description: String,
+    val name: String? = null,
+    val description: String? = null,
     @SerialName("prix_ttc")
-    val price: Double,
+    val price: Double? = null,
     @SerialName("categorie")
-    val category: String,
+    val category: String? = null,
     @SerialName("image_url")
     val imageUrl: String? = null
 )
@@ -50,6 +50,7 @@ class ShopViewModel : ViewModel() {
                 
                 _uiState.value = ShopUiState.Success(response)
             } catch (e: Exception) {
+                e.printStackTrace() // Ajout du log pour débogage
                 _uiState.value = ShopUiState.Error(e.message ?: "Erreur inconnue")
             }
         }
