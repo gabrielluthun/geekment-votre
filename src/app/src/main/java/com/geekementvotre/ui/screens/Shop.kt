@@ -59,12 +59,53 @@ fun Shop(
                 }
             }
             is ShopUiState.Error -> {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(
-                        text = "Erreur : ${state.message}",
-                        color = Color.Red,
-                        modifier = Modifier.padding(16.dp)
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(32.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.logo_geekement_votre),
+                        contentDescription = null,
+                        tint = GeekGold.copy(alpha = 0.3f),
+                        modifier = Modifier.size(120.dp)
                     )
+                    
+                    Spacer(modifier = Modifier.height(24.dp))
+                    
+                    Text(
+                        text = "Boutique indisponible",
+                        color = GeekGold,
+                        fontSize = 20.sp,
+                        fontFamily = PlayfairDisplayFontFamily,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    )
+                    
+                    Spacer(modifier = Modifier.height(8.dp))
+                    
+                    Text(
+                        text = "Une erreur est survenue lors du chargement de la boutique.",
+                        color = GeekWhite.copy(alpha = 0.7f),
+                        fontSize = 14.sp,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                        lineHeight = 20.sp
+                    )
+                    
+                    Spacer(modifier = Modifier.height(32.dp))
+                    
+                    androidx.compose.material3.Button(
+                        onClick = { viewModel.fetchProducts() },
+                        colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                            containerColor = GeekGold,
+                            contentColor = GeekBlack
+                        ),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Text("Réessayer", fontWeight = FontWeight.Bold)
+                    }
                 }
             }
             is ShopUiState.Success -> {
