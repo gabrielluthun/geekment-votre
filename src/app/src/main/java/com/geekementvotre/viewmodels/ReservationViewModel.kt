@@ -22,6 +22,11 @@ data class ReservationUiState(
     val selectedDate: String = "",
     val selectedTime: String = "",
     
+    // État de la soumission
+    val isSubmitting: Boolean = false,
+    val submissionSuccess: Boolean? = null,
+    val errorMessage: String? = null,
+    
     // Validation
     val isEmailValid: Boolean = true
 ) {
