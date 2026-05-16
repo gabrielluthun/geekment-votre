@@ -22,6 +22,7 @@ data class ReservationUiState(
     // Sélection JDR
     val selectedGame: String = "",
     val nbJoueurs: Int = 1,
+    val niveauExperience: String = "",
     
     // Planification
     val selectedDate: String = "",
@@ -42,6 +43,7 @@ data class ReservationUiState(
                 isEmailValid &&
                 dateDeNaissance.isNotBlank() &&
                 selectedGame.isNotBlank() &&
+                niveauExperience.isNotBlank() &&
                 selectedDate.isNotBlank() &&
                 selectedTime.isNotBlank()
 }
@@ -84,6 +86,10 @@ class ReservationViewModel : ViewModel() {
         _uiState.update { it.copy(nbJoueurs = value) }
     }
 
+    fun updateNiveauExperience(value: String) {
+        _uiState.update { it.copy(niveauExperience = value) }
+    }
+
     fun updateSelectedDate(value: String) {
         _uiState.update { it.copy(selectedDate = value) }
     }
@@ -108,6 +114,7 @@ class ReservationViewModel : ViewModel() {
                     genre = currentState.genre,
                     selected_game = currentState.selectedGame,
                     nb_joueurs = currentState.nbJoueurs,
+                    niveau_experience = currentState.niveauExperience,
                     selected_date = currentState.selectedDate,
                     selected_time = currentState.selectedTime
                 )

@@ -11,6 +11,7 @@ data class ReservationDto(
     val genre: String,
     val selected_game: String,
     val nb_joueurs: Int,
+    val niveau_experience: String,
     val selected_date: String,
     val selected_time: String,
     val created_at: String? = null
