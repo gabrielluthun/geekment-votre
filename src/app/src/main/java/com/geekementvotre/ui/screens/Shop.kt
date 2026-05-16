@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.geekementvotre.R
+import java.util.Locale
 import com.geekementvotre.ui.components.ProductCard
 import com.geekementvotre.ui.theme.GeekBlack
 import com.geekementvotre.ui.theme.GeekGold
@@ -72,9 +73,9 @@ fun Shop(
                         tint = GeekGold.copy(alpha = 0.3f),
                         modifier = Modifier.size(120.dp)
                     )
-                    
+
                     Spacer(modifier = Modifier.height(24.dp))
-                    
+
                     Text(
                         text = "Boutique indisponible",
                         color = GeekGold,
@@ -83,19 +84,19 @@ fun Shop(
                         fontWeight = FontWeight.Bold,
                         textAlign = androidx.compose.ui.text.style.TextAlign.Center
                     )
-                    
+
                     Spacer(modifier = Modifier.height(8.dp))
-                    
+
                     Text(
-                        text = "Une erreur est survenue lors du chargement de la boutique.",
+                        text = state.message.ifBlank { "Une erreur est survenue lors du chargement de la boutique." },
                         color = GeekWhite.copy(alpha = 0.7f),
                         fontSize = 14.sp,
                         textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                         lineHeight = 20.sp
                     )
-                    
+
                     Spacer(modifier = Modifier.height(32.dp))
-                    
+
                     androidx.compose.material3.Button(
                         onClick = { viewModel.fetchProducts() },
                         colors = androidx.compose.material3.ButtonDefaults.buttonColors(
@@ -137,10 +138,10 @@ fun Shop(
                     // --- PRODUITS DYNAMIQUES ---
                     items(state.products) { product ->
                         ProductCard(
-                            category = product.category,
-                            name = product.name,
-                            description = product.description,
-                            price = "${product.price}€",
+                            category = product.category ?: "Produit",
+                            name = product.name ?: "Sans nom",
+                            description = product.description ?: "",
+                            price = String.format(Locale.FRANCE, "%.2f€", product.price ?: 0.0),
                             onAddToCart = { /* À implémenter : Panier */ }
                         )
                     }
