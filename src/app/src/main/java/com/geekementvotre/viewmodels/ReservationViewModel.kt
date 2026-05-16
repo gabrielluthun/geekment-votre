@@ -1,10 +1,15 @@
 package com.geekementvotre.viewmodels
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.geekementvotre.data.remote.ReservationDto
+import com.geekementvotre.data.remote.SupabaseClient
+import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 data class ReservationUiState(
     // Informations personnelles
@@ -85,5 +90,44 @@ class ReservationViewModel : ViewModel() {
 
     fun updateSelectedTime(value: String) {
         _uiState.update { it.copy(selectedTime = value) }
+    }
+
+// Send to Supabase Data
+    fun submitReservation() {
+        val currentState = _uiState.value
+        if (!currentState.canSubmit) return
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(isSubmitting = true, submissionSuccess = null, errorMessage = null) }
+            try {
+                val reservation = ReservationDto(
+                    nom = currentState.nom,
+                    prenom = currentState.prenom,
+                    email = currentState.email,
+                    date_de_naissance = currentState.dateDeNaissance,
+                    genre = currentState.genre,
+                    selected_game = currentState.selectedGame,
+                    nb_joueurs = currentState.nbJoueurs,
+                    selected_date = currentState.selectedDate,
+                    selected_time = currentState.selectedTime
+                )
+
+                SupabaseClient.client.postgrest["reservations"].insert(reservation)
+                
+                _uiState.update { it.copy(isSubmitting = false, submissionSuccess = true) }
+            } catch (e: Exception) {
+                _uiState.update { 
+                    it.copy(
+                        isSubmitting = false, 
+                        submissionSuccess = false,
+                        errorMessage = "Une erreur extérieure à l'application est en cours et tout sera rétabli au plus vite."
+                    ) 
+                }
+            }
+        }
+    }
+
+    fun resetSubmissionStatus() {
+        _uiState.update { it.copy(submissionSuccess = null, errorMessage = null) }
     }
 }
