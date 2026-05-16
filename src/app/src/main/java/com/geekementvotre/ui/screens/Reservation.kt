@@ -2,8 +2,10 @@ package com.geekementvotre.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -12,6 +14,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
@@ -26,7 +29,10 @@ import com.geekementvotre.ui.components.*
 import com.geekementvotre.ui.theme.*
 import com.geekementvotre.viewmodels.ReservationViewModel
 import com.geekementvotre.viewmodels.ReservationUiState
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReservationScreen(
     onBack: () -> Unit,
@@ -53,6 +59,11 @@ fun ReservationScreen(
             onNomChange = viewModel::updateNom,
             onPrenomChange = viewModel::updatePrenom,
             onEmailChange = viewModel::updateEmail,
+            onTelephoneChange = viewModel::updateTelephone,
+            onNumeroRueChange = viewModel::updateNumeroRue,
+            onNomRueChange = viewModel::updateNomRue,
+            onCodePostalChange = viewModel::updateCodePostal,
+            onNomVilleChange = viewModel::updateNomVille,
             onDateNaissanceChange = viewModel::updateDateNaissance,
             onGenreChange = viewModel::updateGenre
         )
@@ -62,10 +73,10 @@ fun ReservationScreen(
         // Section 2 : Détails de la session
         SessionDetailsSection(
             uiState = uiState,
-            onDateChange = viewModel::updateSelectedDate,
+            onDateChange = viewModel::updateDateSession,
             onNbJoueursChange = viewModel::updateNbJoueurs,
-            onTimeChange = viewModel::updateSelectedTime,
-            onGameChange = viewModel::updateGame
+            onTimeChange = viewModel::updateCreneauHoraire,
+            onGameChange = viewModel::updateTypeJeu
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -73,8 +84,12 @@ fun ReservationScreen(
         // Section 3 : Lieu et message
         LocationSection(
             uiState = uiState,
-            onAdresseChange = viewModel::updateAdresseSession,
-            onMessageChange = viewModel::updateMessageSpecifique
+            onADomicileChange = viewModel::updateADomicileClient,
+            onNumeroRueChange = viewModel::updateNumeroRueSession,
+            onNomRueChange = viewModel::updateNomRueSession,
+            onCodePostalChange = viewModel::updateCodePostalSession,
+            onNomVilleChange = viewModel::updateNomVilleSession,
+            onMessageChange = viewModel::updateMessageDemande
         )
 
         Spacer(modifier = Modifier.height(40.dp))
@@ -82,7 +97,7 @@ fun ReservationScreen(
         // Affichage de l'erreur si nécessaire
         if (uiState.errorMessage != null) {
             Text(
-                text = uiState.errorMessage?: "Une erreur inconnue est survenue",
+                text = uiState.errorMessage ?: "Une erreur inconnue est survenue",
                 color = GeekError,
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
@@ -163,7 +178,12 @@ private fun PersonalInfoSection(
     onNomChange: (String) -> Unit,
     onPrenomChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
-    onDateNaissanceChange: (String) -> Unit,
+    onTelephoneChange: (String) -> Unit,
+    onNumeroRueChange: (String) -> Unit,
+    onNomRueChange: (String) -> Unit,
+    onCodePostalChange: (String) -> Unit,
+    onNomVilleChange: (String) -> Unit,
+    onDateNaissanceChange: (LocalDate?) -> Unit,
     onGenreChange: (String) -> Unit
 ) {
     ReservationSection(
@@ -189,25 +209,80 @@ private fun PersonalInfoSection(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        CustomTextField(
-            label = "*E-mail",
-            value = uiState.email,
-            onValueChange = onEmailChange,
-            modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-            icon = Icons.Outlined.Email
+        Row(modifier = Modifier.fillMaxWidth()) {
+            CustomTextField(
+                label = "*E-mail",
+                value = uiState.email,
+                onValueChange = onEmailChange,
+                modifier = Modifier.weight(1.2f),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                icon = Icons.Outlined.Email,
+                isError = uiState.email.isNotEmpty() && !uiState.isEmailValid
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            CustomTextField(
+                label = "Téléphone",
+                value = uiState.telephone,
+                onValueChange = onTelephoneChange,
+                modifier = Modifier.weight(0.8f),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                icon = Icons.Outlined.Phone
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = "Adresse de facturation",
+            style = MaterialTheme.typography.labelSmall,
+            color = GeekGold,
+            modifier = Modifier.padding(bottom = 8.dp)
         )
+
+        Row(modifier = Modifier.fillMaxWidth()) {
+            CustomTextField(
+                label = "N°",
+                value = uiState.numeroRue,
+                onValueChange = onNumeroRueChange,
+                modifier = Modifier.weight(0.3f),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            CustomTextField(
+                label = "Rue",
+                value = uiState.nomRue,
+                onValueChange = onNomRueChange,
+                modifier = Modifier.weight(1f)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(modifier = Modifier.fillMaxWidth()) {
+            CustomTextField(
+                label = "Code Postal",
+                value = uiState.codePostal,
+                onValueChange = onCodePostalChange,
+                modifier = Modifier.weight(0.5f),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            CustomTextField(
+                label = "Ville",
+                value = uiState.nomVille,
+                onValueChange = onNomVilleChange,
+                modifier = Modifier.weight(1f)
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Row(modifier = Modifier.fillMaxWidth()) {
-            CustomTextField(
+            DatePickerField(
                 label = "Date de naissance",
                 value = uiState.dateNaissance,
                 onValueChange = onDateNaissanceChange,
-                modifier = Modifier.weight(1f),
-                placeholder = "JJ/MM/AAAA",
-                icon = Icons.Outlined.CalendarMonth
+                modifier = Modifier.weight(1f)
             )
             Spacer(modifier = Modifier.width(16.dp))
             CustomDropdownField(
@@ -224,7 +299,7 @@ private fun PersonalInfoSection(
 @Composable
 private fun SessionDetailsSection(
     uiState: ReservationUiState,
-    onDateChange: (String) -> Unit,
+    onDateChange: (LocalDate?) -> Unit,
     onNbJoueursChange: (String) -> Unit,
     onTimeChange: (String) -> Unit,
     onGameChange: (String) -> Unit
@@ -234,43 +309,50 @@ private fun SessionDetailsSection(
         title = "DÉTAILS DE LA SESSION"
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
-            CustomTextField(
+            DatePickerField(
                 label = "*Date",
-                value = uiState.selectedDate,
+                value = uiState.dateSession,
                 onValueChange = onDateChange,
-                modifier = Modifier.weight(1f),
-                placeholder = "  /  /  ",
-                icon = Icons.Outlined.CalendarMonth
+                modifier = Modifier.weight(1f)
             )
             Spacer(modifier = Modifier.width(16.dp))
             CustomTextField(
-                label = "*Nombre de joueurs",
+                label = "*Joueurs",
                 value = uiState.nbJoueurs,
                 onValueChange = onNbJoueursChange,
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(0.6f),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                icon = Icons.Outlined.Group
+                icon = Icons.Outlined.Group,
+                placeholder = "1-6"
             )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        CustomTextField(
+        CustomDropdownField(
             label = "*Créneau horaire souhaité",
-            value = uiState.selectedTime,
+            selectedValue = uiState.creneauHoraire,
+            options = listOf(
+                "Matinée (2h)",
+                "Matinée (3h)",
+                "Après-midi (3h)",
+                "Après-midi (4h)",
+                "Soirée (3h)",
+                "Soirée (4h)",
+                "Campagne (Journée entière)"
+            ),
             onValueChange = onTimeChange,
-            modifier = Modifier.fillMaxWidth(),
-            icon = Icons.Outlined.Schedule
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        CustomTextField(
+        CustomDropdownField(
             label = "*Type de jeu souhaité",
-            value = uiState.selectedGame,
+            selectedValue = uiState.typeJeu,
+            options = listOf("Fantasy", "Horreur", "Enquête", "Sci-Fi", "Aventure", "Terres d'Ambre"),
             onValueChange = onGameChange,
-            modifier = Modifier.fillMaxWidth(),
-            icon = Icons.Outlined.SportsEsports
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }
@@ -278,27 +360,83 @@ private fun SessionDetailsSection(
 @Composable
 private fun LocationSection(
     uiState: ReservationUiState,
-    onAdresseChange: (String) -> Unit,
+    onADomicileChange: (Boolean) -> Unit,
+    onNumeroRueChange: (String) -> Unit,
+    onNomRueChange: (String) -> Unit,
+    onCodePostalChange: (String) -> Unit,
+    onNomVilleChange: (String) -> Unit,
     onMessageChange: (String) -> Unit
 ) {
     ReservationSection(
         icon = Icons.Outlined.LocationOn,
         title = "LIEU ET MESSAGE"
     ) {
-        CustomTextField(
-            label = "Adresse de la session (si domicile)",
-            value = uiState.adresseSession,
-            onValueChange = onAdresseChange,
-            modifier = Modifier.fillMaxWidth(),
-            placeholder = "Laissez vide si c'est chez moi",
-            icon = Icons.Outlined.Home
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Checkbox(
+                checked = uiState.aDomicileClient,
+                onCheckedChange = onADomicileChange,
+                colors = CheckboxDefaults.colors(
+                    checkedColor = GeekGold,
+                    uncheckedColor = GeekSubtitle,
+                    checkmarkColor = GeekBlack
+                )
+            )
+            Text(
+                text = "C'est chez moi ! (Utiliser mon adresse)",
+                color = GeekWhite,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+
+        if (!uiState.aDomicileClient) {
+            Spacer(modifier = Modifier.height(16.dp))
+            
+            Row(modifier = Modifier.fillMaxWidth()) {
+                CustomTextField(
+                    label = "N°",
+                    value = uiState.numeroRueSession,
+                    onValueChange = onNumeroRueChange,
+                    modifier = Modifier.weight(0.3f),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                CustomTextField(
+                    label = "*Rue de la session",
+                    value = uiState.nomRueSession,
+                    onValueChange = onNomRueChange,
+                    modifier = Modifier.weight(1f),
+                    icon = Icons.Outlined.Home
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(modifier = Modifier.fillMaxWidth()) {
+                CustomTextField(
+                    label = "*Code Postal",
+                    value = uiState.codePostalSession,
+                    onValueChange = onCodePostalChange,
+                    modifier = Modifier.weight(0.5f),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+                CustomTextField(
+                    label = "*Ville",
+                    value = uiState.nomVilleSession,
+                    onValueChange = onNomVilleChange,
+                    modifier = Modifier.weight(1f)
+                )
+            }
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
             label = "Un message spécifique ?",
-            value = uiState.messageSpecifique,
+            value = uiState.messageDemande,
             onValueChange = onMessageChange,
             modifier = Modifier.fillMaxWidth(),
             singleLine = false,
@@ -308,3 +446,96 @@ private fun LocationSection(
         )
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DatePickerField(
+    label: String,
+    value: LocalDate?,
+    onValueChange: (LocalDate?) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var showDatePicker by remember { mutableStateOf(false) }
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = value?.atStartOfDay(java.time.ZoneId.systemDefault())?.toInstant()?.toEpochMilli()
+    )
+
+    if (showDatePicker) {
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    datePickerState.selectedDateMillis?.let { millis ->
+                        onValueChange(java.time.Instant.ofEpochMilli(millis).atZone(java.time.ZoneId.systemDefault()).toLocalDate())
+                    }
+                    showDatePicker = false
+                }) {
+                    Text("OK", color = GeekGold)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePicker = false }) {
+                    Text("Annuler", color = GeekSubtitle)
+                }
+            },
+            colors = DatePickerDefaults.colors(
+                containerColor = GeekCardBackground
+            )
+        ) {
+            DatePicker(
+                state = datePickerState,
+                colors = DatePickerDefaults.colors(
+                    titleContentColor = Color.White,
+                    headlineContentColor = Color.White,
+                    weekdayContentColor = GeekSubtitle,
+                    subheadContentColor = GeekSubtitle,
+                    yearContentColor = Color.White,
+                    selectedYearContentColor = GeekBlack,
+                    selectedYearContainerColor = GeekGold,
+                    dayContentColor = Color.White,
+                    selectedDayContentColor = GeekBlack,
+                    selectedDayContainerColor = GeekGold,
+                    todayContentColor = GeekGold,
+                    todayDateBorderColor = GeekGold
+                )
+            )
+        }
+    }
+
+    Column(modifier = modifier) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelMedium.copy(
+                color = GeekSubtitle,
+                fontWeight = FontWeight.Medium
+            ),
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(44.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .background(GeekInputBackground)
+                .clickable { showDatePicker = true }
+                .padding(horizontal = 12.dp),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = Icons.Outlined.CalendarMonth,
+                    contentDescription = null,
+                    tint = GeekGold.copy(alpha = 0.6f),
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(modifier = Modifier.width(10.dp))
+                Text(
+                    text = value?.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) ?: "JJ/MM/AAAA",
+                    color = if (value == null) GeekSubtitle.copy(alpha = 0.5f) else Color.White,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+    }
+}
+

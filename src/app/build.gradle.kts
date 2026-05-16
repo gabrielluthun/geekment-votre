@@ -16,7 +16,7 @@ android {
 
     defaultConfig {
         applicationId = "com.geekementvotre"
-        minSdk = 25
+        minSdk = 26
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"

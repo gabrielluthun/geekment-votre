@@ -4,16 +4,18 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ReservationDto(
-    val nom: String,
-    val prenom: String,
-    val email: String,
-    val date_de_naissance: String,
-    val genre: String,
-    val selected_date: String,
+    val uuid_reservation: String? = null,
+    val uuid_client: String,
+    val date_session: String, // Format "YYYY-MM-DD"
+    val creneau_horaire: String,
+    val numero_rue_session: Int? = null,
+    val nom_rue_session: String? = null,
+    val code_postal_session: String? = null,
+    val nom_ville_session: String? = null,
+    val a_domicile_client: Boolean = true,
+    val message_demande: String? = null,
+    val statut_reservation: String = "en_attente",
+    val id_google_calendar: String? = null,
     val nb_joueurs: Int,
-    val selected_time: String,
-    val selected_game: String,
-    val adresse_session: String? = null,
-    val message_specifique: String? = null,
-    val created_at: String? = null
+    val type_jeu: String
 )
