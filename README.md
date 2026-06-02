@@ -2,8 +2,6 @@
 
 **Le Jeu de Rôle s'invite chez vous.**
 
-## 🚀 État actuel du projet *(28/04/2026)*
-
 ## ✨ Pourquoi utiliser Geekment Vôtre ?
 
 - **📅 Réservation Express** : Réservez un Maître du Jeu (MJ) professionnel pour vos soirées à domicile en quelques secondes.
