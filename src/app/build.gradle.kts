@@ -33,6 +33,10 @@ android {
         // Injection des clés dans BuildConfig
         buildConfigField("String", "SUPABASE_URL", "\"${secretsProperties.getProperty("supabase.url") ?: ""}\"")
         buildConfigField("String", "SUPABASE_ANON_KEY", "\"${secretsProperties.getProperty("supabase.anon_key") ?: ""}\"")
+        buildConfigField("String", "RESEND_API_KEY", "\"${secretsProperties.getProperty("RESEND_API_KEY") ?: ""}\"")
+        buildConfigField("String", "CONTACT_EMAIL_RECEIVER", "\"${secretsProperties.getProperty("CONTACT_EMAIL_RECEIVER") ?: ""}\"")
+        buildConfigField("String", "RESEND_API_URL", "\"${secretsProperties.getProperty("RESEND_API_URL")?.trim() ?: ""}\"")
+        buildConfigField("String", "RESEND_FROM_EMAIL", "\"${secretsProperties.getProperty("GEEKEMENT_VOTRE_ON_RESEND_MAIL")?.trim() ?: "onboarding@resend.dev"}\"")
     }
 
     buildTypes {
