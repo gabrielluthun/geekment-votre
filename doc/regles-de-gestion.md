@@ -33,7 +33,7 @@
 **RG24** : Ce bouton devra **rediriger** vers un formulaire de réservation  
 **RG25** : Ce formulaire permettra aux joueurs de réserver un créneau pour leur future partie  
 **RG26** : Une réservation **doit** être impossible pour une date / heure passée  
-**RG27** : La réservation devra être **individuelle** (1 formulaire par joueur)  
+**RG27** : La réservation permet d'indiquer le nombre de participants (1 à 99 joueurs)  
 **RG28** : Les futurs joueurs devront indiquer leur niveau d'expérience dans ce formulaire  
 **RG29** : Le MJ pourra consulter une synthèse du formulaire sur une plateforme dédiée  
 
@@ -44,3 +44,17 @@
 **RG33** : Cette section **doit** comporter un bouton d'appel à l'action bien visible  
 **RG34** : Le bouton **doit** renvoyer vers une page de donation / financement  
 **RG35** : L'entièreté de la section devra disparaître / remplacée lors de la **fin** de la campagne de financement  
+
+## Validations et Sécurité des données
+
+**RG36** : Le nom et le prénom du client **doivent** obligatoirement commencer par une majuscule  
+**RG37** : Le numéro de téléphone **doit** respecter le format français *(10 chiffres commençant par 0 ou format international +33 avec 11 chiffres au total)*  
+**RG38** : Le code postal **doit** être composé de 5 chiffres et correspondre aux départements de France métropolitaine (01 à 95)  
+**RG39** : L'adresse (rue) **doit** obligatoirement commencer par un type de voie reconnu *(Rue, Avenue, Boulevard, etc.)*  
+**RG40** : Si l'option "À domicile" est activée, l'adresse de la session est automatiquement synchronisée avec l'adresse de facturation du client  
+**RG41** : Tout message envoyé via les formulaires (contact ou réservation) est filtré contre le langage offensant  
+**RG42** : Après chaque soumission valide, un e-mail de confirmation est envoyé au client et une notification est transmise à l'administrateur
+**RG43** : Le bouton de soumission des formulaires reste **désactivé** tant que **l'ensemble** des critères de validation *(format, champs obligatoires, filtre offensant)* n'est pas rempli
+**RG44** : Les champs numériques (*Téléphone, Code Postal, Nb Joueurs, Numéro de rue)* sont **bridés à la saisie** pour empêcher techniquement le dépassement des limites
+**RG45** : La validation du nombre de joueurs accepte les formats à **1 ou 2 chiffres** *(ex: "5" est valide, pas besoin de "05")*
+
