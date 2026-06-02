@@ -50,15 +50,44 @@ data class ReservationUiState(
     val isEmailValid: Boolean
         get() = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
 
+    val isNomValid: Boolean get() = nom.firstOrNull()?.isUpperCase() == true
+    val isPrenomValid: Boolean get() = prenom.firstOrNull()?.isUpperCase() == true
+    
+    val isTelephoneValid: Boolean get() {
+        val digits = telephone.filter { it.isDigit() }
+        return (telephone.startsWith("0") || telephone.startsWith("+33")) && digits.length == 10
+    }
+
+    val isNomRueValid: Boolean get() = 
+        listOf("Rue", "Avenue", "Chemin", "Impasse", "Boulevard", "Ruelle", "Passerelle")
+            .any { nomRue.startsWith(it, ignoreCase = false) }
+
+    val isCodePostalValid: Boolean get() = 
+        codePostal.length <= 5 && codePostal.all { it.isDigit() } && codePostal.isNotEmpty()
+
+    val isNbJoueursValid: Boolean get() = 
+        nbJoueurs.length == 2 && nbJoueurs.all { it.isDigit() }
+
+    val isMessageClean: Boolean get() = !containsOffensiveLanguage(messageDemande)
+
     val canSubmit: Boolean
-        get() = nom.isNotBlank() &&
-                prenom.isNotBlank() &&
+        get() = isNomValid &&
+                isPrenomValid &&
                 isEmailValid &&
+                isTelephoneValid &&
+                isNomRueValid &&
+                isCodePostalValid &&
                 dateSession != null && 
-                nbJoueurs.isNotBlank() && 
+                isNbJoueursValid && 
                 creneauHoraire.isNotBlank() && 
                 typeJeu.isNotBlank() &&
+                isMessageClean &&
                 (aDomicileClient || (nomRueSession.isNotBlank() && nomVilleSession.isNotBlank() && codePostalSession.isNotBlank()))
+
+    private fun containsOffensiveLanguage(text: String): Boolean {
+        val blacklist = listOf("merde", "con", "salaud", "pute", "enculé", "connard", "chiasse")
+        return blacklist.any { text.contains(it, ignoreCase = true) }
+    }
 }
 
 class ReservationViewModel : ViewModel() {
@@ -124,10 +153,11 @@ class ReservationViewModel : ViewModel() {
                     uuid_client = uuidClient,
                     date_session = currentState.dateSession.toString(),
                     creneau_horaire = currentState.creneauHoraire,
-                    numero_rue_session = if (!currentState.aDomicileClient) currentState.numeroRueSession.toIntOrNull() else null,
-                    nom_rue_session = if (!currentState.aDomicileClient) currentState.nomRueSession.ifBlank { null } else null,
-                    code_postal_session = if (!currentState.aDomicileClient) currentState.codePostalSession.ifBlank { null } else null,
-                    nom_ville_session = if (!currentState.aDomicileClient) currentState.nomVilleSession.ifBlank { null } else null,
+                    // Si domicile client, on copie l'adresse de facturation
+                    numero_rue_session = if (currentState.aDomicileClient) currentState.numeroRue.toIntOrNull() else currentState.numeroRueSession.toIntOrNull(),
+                    nom_rue_session = if (currentState.aDomicileClient) currentState.nomRue.ifBlank { null } else currentState.nomRueSession.ifBlank { null },
+                    code_postal_session = if (currentState.aDomicileClient) currentState.codePostal.ifBlank { null } else currentState.codePostalSession.ifBlank { null },
+                    nom_ville_session = if (currentState.aDomicileClient) currentState.nomVille.ifBlank { null } else currentState.nomVilleSession.ifBlank { null },
                     a_domicile_client = currentState.aDomicileClient,
                     message_demande = currentState.messageDemande.ifBlank { null },
                     nb_joueurs = currentState.nbJoueurs.toIntOrNull() ?: 0,
