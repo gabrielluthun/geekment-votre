@@ -2,17 +2,17 @@
 
 **Le Jeu de Rôle s'invite chez vous.**
 
-## ✨ Pourquoi utiliser Geekment Vôtre ?
+## Pourquoi utiliser Geekment Vôtre ?
 
-- **📅 Réservation Express** : Réservez un Maître du Jeu (MJ) professionnel pour vos soirées à domicile en quelques secondes.
-- **🛡️ Sécurité & Confidentialité** : Vos données personnelles et vos adresses sont protégées par les meilleurs standards de sécurité et des politiques de confidentialité strictes.
-- **🚀 Soutenez l'Aventure** : Participez au financement de nouveaux univers et projets via notre section Crowdfunding intégrée.
-- **✉️ Contact Direct** : Une question ? Un besoin spécifique ? Envoyez un message directement via l'application.
+- **Réservation Express** : Réservez un Maître du Jeu (MJ) professionnel pour vos soirées à domicile en quelques secondes.
+- **Sécurité & Confidentialité** : Vos données personnelles et vos adresses sont protégées par les meilleurs standards de sécurité et des politiques de confidentialité strictes.
+- **Soutenez l'Aventure** : Participez au financement de nouveaux univers et projets via notre section Crowdfunding intégrée.
+- **Contact Direct** : Une question ? Un besoin spécifique ? Envoyez un message directement via l'application.
 
 ---
 ## Spécifications techniques  
 
-### 🚀 État actuel du projet *(Dernière mise à jour : 02/06/2026)*
+### État actuel du projet *(Dernière mise à jour : 02/06/2026)*
 
 Le projet est dans une phase avancée de développement. Les éléments suivants sont fonctionnels :
 - **Architecture & Navigation** : Navigation moderne via `Scaffold` et `BottomBar` (Jetpack Compose).
@@ -55,7 +55,7 @@ Le projet est dans une phase avancée de développement. Les éléments suivants
 └── README.md
 ```
 
-### ⚙️ Installation et Configuration
+### Installation et Configuration
 
 1. **Cloner le projet**
 2. **Secrets** : Créer un fichier `src/secrets.properties` à la racine du projet Android :
@@ -67,7 +67,7 @@ Le projet est dans une phase avancée de développement. Les éléments suivants
    ```
 3. **Build** : Synchroniser Gradle et lancer sur un appareil compatible (physique ou virtuel).
 
-## 📖 Documentation de référence
+## Documentation de référence
 
 - **`doc/regles-de-gestion.md`** — Crucial pour comprendre les validations des formulaires.
 - **`doc/bdd/`** — Structure des tables PostgreSQL.
