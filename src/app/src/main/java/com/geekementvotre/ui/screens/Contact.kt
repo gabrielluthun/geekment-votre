@@ -94,8 +94,17 @@ fun ContactScreen(
                 singleLine = false,
                 minLines = 5,
                 placeholder = "Comment puis-je vous aider ?",
-                icon = Icons.Outlined.Message
+                icon = Icons.Outlined.Message,
+                isError = uiState.message.isNotEmpty() && !uiState.isMessageClean
             )
+            if (uiState.message.isNotEmpty() && !uiState.isMessageClean) {
+                Text(
+                    "Le message contient des propos inappropriés.",
+                    color = GeekError,
+                    style = MaterialTheme.typography.labelSmall,
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(32.dp))
