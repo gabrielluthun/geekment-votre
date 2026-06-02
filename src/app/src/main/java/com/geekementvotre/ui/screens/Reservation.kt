@@ -196,14 +196,18 @@ private fun PersonalInfoSection(
                 value = uiState.nom,
                 onValueChange = onNomChange,
                 modifier = Modifier.weight(1f),
-                icon = Icons.Outlined.Person
+                icon = Icons.Outlined.Person,
+                isError = uiState.nom.isNotEmpty() && !uiState.isNomValid,
+                placeholder = "Ex: Dupont"
             )
             Spacer(modifier = Modifier.width(16.dp))
             CustomTextField(
                 label = "*Prénom",
                 value = uiState.prenom,
                 onValueChange = onPrenomChange,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                isError = uiState.prenom.isNotEmpty() && !uiState.isPrenomValid,
+                placeholder = "Ex: Jean"
             )
         }
 
@@ -227,7 +231,9 @@ private fun PersonalInfoSection(
             onValueChange = onTelephoneChange,
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-            icon = Icons.Outlined.Phone
+            icon = Icons.Outlined.Phone,
+            isError = uiState.telephone.isNotEmpty() && !uiState.isTelephoneValid,
+            placeholder = "0612345678 ou +33..."
         )
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -257,7 +263,9 @@ private fun PersonalInfoSection(
                 label = "Rue",
                 value = uiState.nomRue,
                 onValueChange = onNomRueChange,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                isError = uiState.nomRue.isNotEmpty() && !uiState.isNomRueValid,
+                placeholder = "Rue, Avenue..."
             )
         }
 
@@ -269,7 +277,8 @@ private fun PersonalInfoSection(
                 value = uiState.codePostal,
                 onValueChange = onCodePostalChange,
                 modifier = Modifier.weight(0.5f),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                isError = uiState.codePostal.isNotEmpty() && !uiState.isCodePostalValid
             )
             Spacer(modifier = Modifier.width(16.dp))
             CustomTextField(
@@ -344,14 +353,15 @@ private fun SessionDetailsSection(
                 modifier = Modifier.weight(0.6f),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 icon = Icons.Outlined.Group,
-                placeholder = "1-6"
+                placeholder = "Ex: 04",
+                isError = uiState.nbJoueurs.isNotEmpty() && !uiState.isNbJoueursValid
             )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomDropdownField(
-            label = "*Créneau horaire souhaité",
+            label = "*Créneau horaire souhaité (durée estimée)",
             selectedValue = uiState.creneauHoraire,
             options = listOf(
                 "Matinée (2h)",
@@ -430,7 +440,9 @@ private fun LocationSection(
                     value = uiState.nomRueSession,
                     onValueChange = onNomRueChange,
                     modifier = Modifier.weight(1f),
-                    icon = Icons.Outlined.Home
+                    icon = Icons.Outlined.Home,
+                    isError = uiState.nomRueSession.isNotEmpty() && !uiState.isNomRueSessionValid,
+                    placeholder = "Rue, Avenue..."
                 )
             }
 
@@ -442,7 +454,8 @@ private fun LocationSection(
                     value = uiState.codePostalSession,
                     onValueChange = onCodePostalChange,
                     modifier = Modifier.weight(0.5f),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    isError = uiState.codePostalSession.isNotEmpty() && !uiState.isCodePostalSessionValid
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 CustomTextField(
@@ -464,8 +477,17 @@ private fun LocationSection(
             singleLine = false,
             minLines = 3,
             placeholder = "Indiquez ici des détails, questions...",
-            icon = Icons.Outlined.ChatBubbleOutline
+            icon = Icons.Outlined.ChatBubbleOutline,
+            isError = uiState.messageDemande.isNotEmpty() && !uiState.isMessageClean
         )
+        if (uiState.messageDemande.isNotEmpty() && !uiState.isMessageClean) {
+            Text(
+                "Le message contient des propos inappropriés.",
+                color = GeekError,
+                style = MaterialTheme.typography.labelSmall,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+        }
     }
 }
 
