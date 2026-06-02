@@ -1,5 +1,6 @@
 package com.geekementvotre.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.geekementvotre.data.remote.ClientDto
@@ -212,7 +213,7 @@ class ReservationViewModel : ViewModel() {
                 
                 _uiState.value = ReservationUiState(submissionSuccess = true)
             } catch (e: Exception) {
-                e.printStackTrace()
+                Log.e("ReservationViewModel", "Erreur lors de la réservation", e)
                 _uiState.update { 
                     it.copy(
                         isSubmitting = false, 
