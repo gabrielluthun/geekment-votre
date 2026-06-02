@@ -65,6 +65,13 @@ data class ReservationUiState(
     val isCodePostalValid: Boolean get() = 
         codePostal.length <= 5 && codePostal.all { it.isDigit() } && codePostal.isNotEmpty()
 
+    val isNomRueSessionValid: Boolean get() = 
+        aDomicileClient || listOf("Rue", "Avenue", "Chemin", "Impasse", "Boulevard", "Ruelle", "Passerelle")
+            .any { nomRueSession.startsWith(it, ignoreCase = false) }
+
+    val isCodePostalSessionValid: Boolean get() = 
+        aDomicileClient || (codePostalSession.length <= 5 && codePostalSession.all { it.isDigit() } && codePostalSession.isNotEmpty())
+
     val isNbJoueursValid: Boolean get() = 
         nbJoueurs.length == 2 && nbJoueurs.all { it.isDigit() }
 
@@ -82,7 +89,7 @@ data class ReservationUiState(
                 creneauHoraire.isNotBlank() && 
                 typeJeu.isNotBlank() &&
                 isMessageClean &&
-                (aDomicileClient || (nomRueSession.isNotBlank() && nomVilleSession.isNotBlank() && codePostalSession.isNotBlank()))
+                (aDomicileClient || (isNomRueSessionValid && nomVilleSession.isNotBlank() && isCodePostalSessionValid))
 
     private fun containsOffensiveLanguage(text: String): Boolean {
         val blacklist = listOf("merde", "con", "salaud", "pute", "enculé", "connard", "chiasse")

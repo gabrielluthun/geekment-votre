@@ -21,8 +21,15 @@ data class ContactUiState(
     val isEmailValid: Boolean
         get() = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
 
+    val isMessageClean: Boolean get() = !containsOffensiveLanguage(message)
+
     val canSubmit: Boolean
-        get() = nom.isNotBlank() && isEmailValid && sujet.isNotBlank() && message.isNotBlank()
+        get() = nom.isNotBlank() && isEmailValid && sujet.isNotBlank() && message.isNotBlank() && isMessageClean
+
+    private fun containsOffensiveLanguage(text: String): Boolean {
+        val blacklist = listOf("merde", "con", "salaud", "pute", "enculé", "connard", "chiasse")
+        return blacklist.any { text.contains(it, ignoreCase = true) }
+    }
 }
 
 class ContactViewModel : ViewModel() {
