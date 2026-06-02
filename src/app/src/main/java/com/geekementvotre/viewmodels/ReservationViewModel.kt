@@ -55,7 +55,11 @@ data class ReservationUiState(
     
     val isTelephoneValid: Boolean get() {
         val digits = telephone.filter { it.isDigit() }
-        return (telephone.startsWith("0") || telephone.startsWith("+33")) && digits.length == 10
+        return if (telephone.startsWith("+33")) {
+            digits.length == 11
+        } else if (telephone.startsWith("0")) {
+            digits.length == 10
+        } else false
     }
 
     val isNomRueValid: Boolean get() = 
@@ -63,17 +67,23 @@ data class ReservationUiState(
             .any { nomRue.startsWith(it, ignoreCase = false) }
 
     val isCodePostalValid: Boolean get() = 
-        codePostal.length <= 5 && codePostal.all { it.isDigit() } && codePostal.isNotEmpty()
+        codePostal.length == 5 && 
+        codePostal.all { it.isDigit() } && 
+        codePostal.take(2).toIntOrNull()?.let { it in 1..95 } == true
 
     val isNomRueSessionValid: Boolean get() = 
         aDomicileClient || listOf("Rue", "Avenue", "Chemin", "Impasse", "Boulevard", "Ruelle", "Passerelle")
             .any { nomRueSession.startsWith(it, ignoreCase = false) }
 
     val isCodePostalSessionValid: Boolean get() = 
-        aDomicileClient || (codePostalSession.length <= 5 && codePostalSession.all { it.isDigit() } && codePostalSession.isNotEmpty())
+        aDomicileClient || (
+            codePostalSession.length == 5 && 
+            codePostalSession.all { it.isDigit() } && 
+            codePostalSession.take(2).toIntOrNull()?.let { it in 1..95 } == true
+        )
 
     val isNbJoueursValid: Boolean get() = 
-        nbJoueurs.length == 2 && nbJoueurs.all { it.isDigit() }
+        nbJoueurs.isNotEmpty() && nbJoueurs.length <= 2 && nbJoueurs.all { it.isDigit() } && nbJoueurs.toIntOrNull()?.let { it > 0 } == true
 
     val isMessageClean: Boolean get() = !containsOffensiveLanguage(messageDemande)
 
@@ -104,10 +114,25 @@ class ReservationViewModel : ViewModel() {
     fun updateNom(value: String) { _uiState.update { it.copy(nom = value) } }
     fun updatePrenom(value: String) { _uiState.update { it.copy(prenom = value) } }
     fun updateEmail(value: String) { _uiState.update { it.copy(email = value) } }
-    fun updateTelephone(value: String) { _uiState.update { it.copy(telephone = value) } }
-    fun updateNumeroRue(value: String) { _uiState.update { it.copy(numeroRue = value) } }
+    fun updateTelephone(value: String) { 
+        val digitsOnly = value.filter { it.isDigit() || it == '+' }
+        // On limite à 10 chiffres si ça commence par 0, ou 12 caractères si +33 (ex: +33612345678)
+        val maxLength = if (digitsOnly.startsWith("+")) 12 else 10
+        if (digitsOnly.length <= maxLength) {
+            _uiState.update { it.copy(telephone = digitsOnly) } 
+        }
+    }
+    fun updateNumeroRue(value: String) { 
+        if (value.length <= 4 && value.all { it.isDigit() }) {
+            _uiState.update { it.copy(numeroRue = value) } 
+        }
+    }
     fun updateNomRue(value: String) { _uiState.update { it.copy(nomRue = value) } }
-    fun updateCodePostal(value: String) { _uiState.update { it.copy(codePostal = value) } }
+    fun updateCodePostal(value: String) { 
+        if (value.length <= 5 && value.all { it.isDigit() }) {
+            _uiState.update { it.copy(codePostal = value) } 
+        }
+    }
     fun updateNomVille(value: String) { _uiState.update { it.copy(nomVille = value) } }
     fun updateDateNaissance(value: LocalDate?) { _uiState.update { it.copy(dateNaissance = value) } }
     fun updateGenre(value: String) { _uiState.update { it.copy(genre = value) } }
@@ -115,12 +140,24 @@ class ReservationViewModel : ViewModel() {
     fun updateDateSession(value: LocalDate?) { _uiState.update { it.copy(dateSession = value) } }
     fun updateCreneauHoraire(value: String) { _uiState.update { it.copy(creneauHoraire = value) } }
     fun updateTypeJeu(value: String) { _uiState.update { it.copy(typeJeu = value) } }
-    fun updateNbJoueurs(value: String) { _uiState.update { it.copy(nbJoueurs = value) } }
+    fun updateNbJoueurs(value: String) { 
+        if (value.length <= 2 && value.all { it.isDigit() }) {
+            _uiState.update { it.copy(nbJoueurs = value) } 
+        }
+    }
 
     fun updateADomicileClient(value: Boolean) { _uiState.update { it.copy(aDomicileClient = value) } }
-    fun updateNumeroRueSession(value: String) { _uiState.update { it.copy(numeroRueSession = value) } }
+    fun updateNumeroRueSession(value: String) { 
+        if (value.length <= 4 && value.all { it.isDigit() }) {
+            _uiState.update { it.copy(numeroRueSession = value) } 
+        }
+    }
     fun updateNomRueSession(value: String) { _uiState.update { it.copy(nomRueSession = value) } }
-    fun updateCodePostalSession(value: String) { _uiState.update { it.copy(codePostalSession = value) } }
+    fun updateCodePostalSession(value: String) { 
+        if (value.length <= 5 && value.all { it.isDigit() }) {
+            _uiState.update { it.copy(codePostalSession = value) } 
+        }
+    }
     fun updateNomVilleSession(value: String) { _uiState.update { it.copy(nomVilleSession = value) } }
     fun updateMessageDemande(value: String) { _uiState.update { it.copy(messageDemande = value) } }
 
