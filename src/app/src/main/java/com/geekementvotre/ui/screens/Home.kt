@@ -112,7 +112,7 @@ fun Home(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     GeekButton(text = "Réserver", onClick = { onNavigate("reservation") }, modifier = Modifier.fillMaxWidth())
-                    GeekButton(text = "Me contacter", onClick = { }, modifier = Modifier.fillMaxWidth(), isOutlined = true)
+                    GeekButton(text = "Me contacter", onClick = { onNavigate("contact") }, modifier = Modifier.fillMaxWidth(), isOutlined = true)
                 }
             } else {
                 Row(
@@ -120,7 +120,7 @@ fun Home(
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     GeekButton(text = "Réserver", onClick = { onNavigate("reservation") }, modifier = Modifier.weight(1f))
-                    GeekButton(text = "Me contacter", onClick = { }, modifier = Modifier.weight(1f), isOutlined = true)
+                    GeekButton(text = "Me contacter", onClick = { onNavigate("contact") }, modifier = Modifier.weight(1f), isOutlined = true)
                 }
             }
 
