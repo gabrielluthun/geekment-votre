@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.geekementvotre.ui.components.Footer
+import com.geekementvotre.ui.screens.ContactScreen
 import com.geekementvotre.ui.screens.Home
 import com.geekementvotre.ui.screens.ReservationScreen
 import com.geekementvotre.ui.screens.ReservationSuccess
@@ -54,6 +55,7 @@ class MainActivity : ComponentActivity() {
                             "reservation_success" -> ReservationSuccess(
                                 onReturnHome = { currentRoute = "accueil" }
                             )
+                            "contact" -> ContactScreen()
                             else -> Home(onNavigate = { currentRoute = it })
                         }
                     }
