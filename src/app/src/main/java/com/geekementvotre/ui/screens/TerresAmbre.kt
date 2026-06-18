@@ -22,12 +22,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.geekementvotre.BuildConfig
 import com.geekementvotre.R
 import com.geekementvotre.ui.theme.GeekBlack
 import com.geekementvotre.ui.theme.GeekGold
@@ -37,6 +39,8 @@ import com.geekementvotre.ui.theme.PlayfairDisplayFontFamily
 @Composable
 fun TerresAmbre(modifier: Modifier = Modifier) {
     val scrollState = rememberScrollState()
+    val uriHandler = LocalUriHandler.current
+    val paypalUrl = BuildConfig.PAYPAL_URL
 
     Box(
         modifier = modifier
@@ -101,17 +105,18 @@ fun TerresAmbre(modifier: Modifier = Modifier) {
                     Spacer(modifier = Modifier.height(40.dp))
 
                     Text(
-                        text = "(insérer description, inconnue\npour l'instant)",
-                        color = GeekWhite.copy(alpha = 0.4f),
-                        fontSize = 14.sp,
-                        textAlign = TextAlign.Center,
-                        lineHeight = 20.sp
+                        text = "Un univers de JDR immersif sensibilisant aux neuro-atypies. Partez à l'aventure dans un monde peuplé de créatures fantastiques et de dieux attachants, où chaque décision forge une quête inoubliable.",
+                        color = GeekWhite.copy(alpha = 0.8f),
+                        fontSize = 15.sp,
+                        textAlign = TextAlign.Start,
+                        lineHeight = 22.sp,
+                        letterSpacing = 1.sp
                     )
 
                     Spacer(modifier = Modifier.height(40.dp))
 
                     Button(
-                        onClick = { /* À venir */ },
+                        onClick = { uriHandler.openUri(paypalUrl) },
                         colors = ButtonDefaults.buttonColors(containerColor = GeekGold),
                         shape = RoundedCornerShape(12.dp),
                         contentPadding = PaddingValues(horizontal = 20.dp, vertical = 12.dp),
@@ -236,11 +241,12 @@ fun TerresAmbre(modifier: Modifier = Modifier) {
                     Spacer(modifier = Modifier.height(60.dp))
 
                     Text(
-                        text = "(insérer description, inconnue\npour l'instant)",
-                        color = GeekWhite.copy(alpha = 0.4f),
-                        fontSize = 14.sp,
+                        text = "Au commencement, Ambresia (ou les Terres d'Ambre) était plongée dans les ténèbres. Lyanna et Elyan, deux demi-dieux, protègent ce monde depuis les Voiles, la demeure céleste. Vous incarnez un héros capable de devenir un champion du bien ! Rencontres, magie et mystère seront au rendez-vous.",
+                        color = GeekWhite.copy(alpha = 0.8f),
+                        fontSize = 15.sp,
                         textAlign = TextAlign.Center,
-                        lineHeight = 20.sp
+                        lineHeight = 22.sp,
+                        letterSpacing = 1.sp
                     )
 
                     Spacer(modifier = Modifier.height(60.dp))
@@ -269,7 +275,7 @@ fun TerresAmbre(modifier: Modifier = Modifier) {
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = { /* À venir */ },
+                onClick = { uriHandler.openUri(paypalUrl) },
                 colors = ButtonDefaults.buttonColors(containerColor = GeekGold),
                 shape = RoundedCornerShape(12.dp),
                 contentPadding = PaddingValues(horizontal = 24.dp, vertical = 14.dp),
