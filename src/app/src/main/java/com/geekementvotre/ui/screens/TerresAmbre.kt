@@ -101,11 +101,12 @@ fun TerresAmbre(modifier: Modifier = Modifier) {
                     Spacer(modifier = Modifier.height(40.dp))
 
                     Text(
-                        text = "(insérer description, inconnue\npour l'instant)",
-                        color = GeekWhite.copy(alpha = 0.4f),
-                        fontSize = 14.sp,
-                        textAlign = TextAlign.Center,
-                        lineHeight = 20.sp
+                        text = "Un univers de JDR immersif sensibilisant aux neuro-atypies. Partez à l'aventure dans un monde peuplé de créatures fantastiques et de dieux attachants, où chaque décision forge une quête inoubliable.",
+                        color = GeekWhite.copy(alpha = 0.8f),
+                        fontSize = 15.sp,
+                        textAlign = TextAlign.Start,
+                        lineHeight = 22.sp,
+                        letterSpacing = 1.sp
                     )
 
                     Spacer(modifier = Modifier.height(40.dp))
@@ -236,11 +237,11 @@ fun TerresAmbre(modifier: Modifier = Modifier) {
                     Spacer(modifier = Modifier.height(60.dp))
 
                     Text(
-                        text = "(insérer description, inconnue\npour l'instant)",
-                        color = GeekWhite.copy(alpha = 0.4f),
-                        fontSize = 14.sp,
-                        textAlign = TextAlign.Center,
-                        lineHeight = 20.sp
+                        text = "Un univers de JDR immersif sensibilisant aux neuro-atypies. Partez à l'aventure dans un monde peuplé de créatures fantastiques et de dieux attachants, où chaque décision forge une quête inoubliable.",
+                        color = GeekWhite.copy(alpha = 0.8f),
+                        fontSize = 15.sp,
+                        textAlign = TextAlign.Start,
+                        lineHeight = 22.sp
                     )
 
                     Spacer(modifier = Modifier.height(60.dp))
