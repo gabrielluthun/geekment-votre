@@ -105,7 +105,7 @@ fun TerresAmbre(modifier: Modifier = Modifier) {
                     Spacer(modifier = Modifier.height(40.dp))
 
                     Text(
-                        text = "Un univers de JDR immersif sensibilisant aux neuro-atypies. Partez à l'aventure dans un monde peuplé de créatures fantastiques et de dieux attachants, où chaque décision forge une quête inoubliable.",
+                        text = "Plus qu'un jeu, une aventure humaine. Terres d'Ambre propose une immersion totale au cœur d'un univers fantasy original, pensé pour sensibiliser aux neuro-atypies tout en offrant une expérience de jeu riche et modulaire.",
                         color = GeekWhite.copy(alpha = 0.8f),
                         fontSize = 15.sp,
                         textAlign = TextAlign.Start,

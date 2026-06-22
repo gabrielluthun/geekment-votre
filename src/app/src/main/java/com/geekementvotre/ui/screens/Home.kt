@@ -215,17 +215,18 @@ fun Home(
                     Spacer(modifier = Modifier.height(if (isSmallScreen) 16.dp else 32.dp))
                     
                     Text(
-                        text = "(Insérer description, inconnue pour l'instant)",
-                        color = GeekWhite.copy(alpha = 0.4f),
-                        fontSize = 14.sp,
+                        text = "Découvrez Terres d'Ambre, un JDR épique et inclusif ! Forgez votre légende dans un monde où la magie côtoie la sensibilisation, et participez à l'éclosion d'un univers fantastique unique.",
+                        color = GeekWhite.copy(alpha = 0.8f),
+                        fontSize = 15.sp,
                         textAlign = TextAlign.Center,
+                        lineHeight = 22.sp,
                         modifier = Modifier.fillMaxWidth()
                     )
                     
                     Spacer(modifier = Modifier.height(24.dp))
                     
                     Button(
-                        onClick = { /* Action */ },
+                        onClick = { onNavigate("terres_ambre") },
                         colors = ButtonDefaults.buttonColors(containerColor = GeekGold),
                         shape = RoundedCornerShape(12.dp),
                         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
