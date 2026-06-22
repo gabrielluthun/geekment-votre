@@ -2,33 +2,17 @@ package com.geekementvotre.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.geekementvotre.data.model.Product
 import com.geekementvotre.data.remote.SupabaseClient
 import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class ProductFromSupabase(
-    @SerialName("uuid_goodie")
-    val id: String? = null,
-    @SerialName("nom")
-    val name: String? = null,
-    val description: String? = null,
-    @SerialName("prix_ttc")
-    val price: Double? = null,
-    @SerialName("categorie")
-    val category: String? = null,
-    @SerialName("image_url")
-    val imageUrl: String? = null
-)
 
 sealed class ShopUiState {
-    object Loading : ShopUiState()
-    data class Success(val products: List<ProductFromSupabase>) : ShopUiState()
+    data object Loading : ShopUiState()
+    data class Success(val products: List<Product>) : ShopUiState()
     data class Error(val message: String) : ShopUiState()
 }
 
@@ -46,11 +30,11 @@ class ShopViewModel : ViewModel() {
             try {
                 val response = SupabaseClient.client.postgrest["goodie"]
                     .select()
-                    .decodeList<ProductFromSupabase>()
+                    .decodeList<Product>()
                 
                 _uiState.value = ShopUiState.Success(response)
             } catch (e: Exception) {
-                e.printStackTrace() // Ajout du log pour débogage
+                e.printStackTrace()
                 _uiState.value = ShopUiState.Error(e.message ?: "Erreur inconnue")
             }
         }
