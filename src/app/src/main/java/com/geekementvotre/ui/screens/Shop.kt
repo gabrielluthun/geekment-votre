@@ -17,6 +17,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -26,23 +29,40 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.geekementvotre.R
 import java.util.Locale
+import com.geekementvotre.ui.components.CartBottomSheet
 import com.geekementvotre.ui.components.ProductCard
 import com.geekementvotre.ui.theme.GeekBlack
 import com.geekementvotre.ui.theme.GeekGold
 import com.geekementvotre.ui.theme.GeekWhite
 import com.geekementvotre.ui.theme.PlayfairDisplayFontFamily
+import com.geekementvotre.viewmodels.CartViewModel
 import com.geekementvotre.viewmodels.ShopUiState
 import com.geekementvotre.viewmodels.ShopViewModel
 
 @Composable
 fun Shop(
     modifier: Modifier = Modifier,
-    viewModel: ShopViewModel = viewModel()
+    viewModel: ShopViewModel = viewModel(),
+    cartViewModel: CartViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val cartCount by cartViewModel.cartCount.collectAsState()
+    var showCart by remember { mutableStateOf(false) }
+
+    if (showCart) {
+        CartBottomSheet(
+            cartViewModel = cartViewModel,
+            onCheckout = {
+                // TODO: Implémenter le checkout (ex: Stripe)
+                showCart = false
+            },
+            onDismiss = { showCart = false }
+        )
+    }
 
     Box(
         modifier = modifier
@@ -131,7 +151,7 @@ fun Shop(
                     // --- HEADER ---
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         Spacer(modifier = Modifier.height(8.dp))
-                        ShopHeader()
+                        ShopHeader(cartCount = cartCount, onCartClick = { showCart = true })
                         Spacer(modifier = Modifier.height(8.dp))
                     }
 
@@ -142,7 +162,8 @@ fun Shop(
                             name = product.name ?: "Sans nom",
                             description = product.description ?: "",
                             price = String.format(Locale.FRANCE, "%.2f€", product.price ?: 0.0),
-                            onAddToCart = { /* À implémenter : Panier */ }
+                            imageUrl = product.imageUrl,
+                            onAddToCart = { cartViewModel.addToCart(product) }
                         )
                     }
                 }
@@ -152,7 +173,10 @@ fun Shop(
 }
 
 @Composable
-private fun ShopHeader() {
+private fun ShopHeader(
+    cartCount: Int,
+    onCartClick: () -> Unit
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -179,7 +203,8 @@ private fun ShopHeader() {
         }
 
         // Icône Panier
-        Box(
+        androidx.compose.material3.IconButton(
+            onClick = onCartClick,
             modifier = Modifier
                 .padding(top = 4.dp)
                 .size(52.dp)
@@ -187,15 +212,32 @@ private fun ShopHeader() {
                     width = 1.dp,
                     color = GeekGold.copy(alpha = 0.6f),
                     shape = RoundedCornerShape(14.dp)
-                ),
-            contentAlignment = Alignment.Center
+                )
         ) {
-            Icon(
-                imageVector = Icons.Outlined.ShoppingBag,
-                contentDescription = "Panier",
-                tint = GeekWhite,
-                modifier = Modifier.size(26.dp)
-            )
+            Box {
+                Icon(
+                    imageVector = Icons.Outlined.ShoppingBag,
+                    contentDescription = "Panier",
+                    tint = GeekWhite,
+                    modifier = Modifier.size(26.dp)
+                )
+                if (cartCount > 0) {
+                    Box(
+                        modifier = Modifier
+                            .size(18.dp)
+                            .background(GeekGold, RoundedCornerShape(9.dp))
+                            .align(Alignment.BottomEnd),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = cartCount.toString(),
+                            color = GeekBlack,
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
         }
     }
 }
