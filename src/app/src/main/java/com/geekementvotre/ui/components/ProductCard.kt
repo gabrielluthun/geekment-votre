@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.geekementvotre.R
 import com.geekementvotre.ui.theme.DMSansFontFamily
 import com.geekementvotre.ui.theme.GeekBlack
@@ -36,7 +37,7 @@ fun ProductCard(
     price: String,
     onAddToCart: () -> Unit,
     modifier: Modifier = Modifier,
-    imageRes: Int = R.drawable.logo_geekement_votre // Par défaut
+    imageUrl: String? = null
 ) {
     Column(
         modifier = modifier
@@ -53,12 +54,21 @@ fun ProductCard(
                 .background(GeekBlack.copy(alpha = 0.3f)),
             contentAlignment = Alignment.Center
         ) {
-            Image(
-                painter = painterResource(id = imageRes),
-                contentDescription = name,
-                modifier = Modifier.size(80.dp),
-                contentScale = ContentScale.Fit
-            )
+            if (imageUrl != null) {
+                AsyncImage(
+                    model = imageUrl,
+                    contentDescription = name,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                Image(
+                    painter = painterResource(id = R.drawable.logo_geekement_votre),
+                    contentDescription = name,
+                    modifier = Modifier.size(80.dp),
+                    contentScale = ContentScale.Fit
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(12.dp))
