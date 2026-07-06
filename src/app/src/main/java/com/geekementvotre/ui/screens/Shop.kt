@@ -41,6 +41,7 @@ import com.geekementvotre.R
 import java.util.Locale
 import com.geekementvotre.ui.components.CartBottomSheet
 import com.geekementvotre.ui.components.ProductCard
+import com.geekementvotre.ui.screens.CheckoutFormScreen
 import com.geekementvotre.ui.theme.GeekBlack
 import com.geekementvotre.ui.theme.GeekGold
 import com.geekementvotre.ui.theme.GeekWhite
@@ -137,7 +138,7 @@ fun Shop(
         CartBottomSheet(
             cartViewModel = cartViewModel,
             onCheckout = {
-                checkoutViewModel.prepareCheckout((cartTotal * 100).toLong())
+                checkoutViewModel.startCheckout()
                 showCart = false
             },
             onDismiss = { showCart = false }
@@ -153,98 +154,106 @@ fun Shop(
                 )
             )
     ) {
-        when (val state = uiState) {
-            is ShopUiState.Loading -> {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = GeekGold)
-                }
-            }
-            is ShopUiState.Error -> {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(32.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.logo_geekement_votre),
-                        contentDescription = null,
-                        tint = GeekGold.copy(alpha = 0.3f),
-                        modifier = Modifier.size(120.dp)
-                    )
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    Text(
-                        text = "Boutique indisponible",
-                        color = GeekGold,
-                        fontSize = 20.sp,
-                        fontFamily = PlayfairDisplayFontFamily,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Text(
-                        text = state.message.ifBlank { "Une erreur est survenue lors du chargement de la boutique." },
-                        color = GeekWhite.copy(alpha = 0.7f),
-                        fontSize = 14.sp,
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                        lineHeight = 20.sp
-                    )
-
-                    Spacer(modifier = Modifier.height(32.dp))
-
-                    androidx.compose.material3.Button(
-                        onClick = { viewModel.fetchProducts() },
-                        colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                            containerColor = GeekGold,
-                            contentColor = GeekBlack
-                        ),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Text("Réessayer", fontWeight = FontWeight.Bold)
+        if (checkoutState is CheckoutUiState.Form) {
+            CheckoutFormScreen(
+                viewModel = checkoutViewModel,
+                totalAmount = cartTotal,
+                onBack = { checkoutViewModel.resetState() }
+            )
+        } else {
+            when (val state = uiState) {
+                is ShopUiState.Loading -> {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator(color = GeekGold)
                     }
                 }
-            }
-            is ShopUiState.Success -> {
-                LazyVerticalGrid(
-                    columns = GridCells.Adaptive(minSize = 160.dp),
-                    contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 32.dp, top = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    // --- LOGO ---
-                    item(span = { GridItemSpan(maxLineSpan) }) {
-                        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                            Image(
-                                painter = painterResource(id = R.drawable.logo_geekement_votre),
-                                contentDescription = "Logo",
-                                modifier = Modifier.size(80.dp)
-                            )
+                is ShopUiState.Error -> {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(32.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.logo_geekement_votre),
+                            contentDescription = null,
+                            tint = GeekGold.copy(alpha = 0.3f),
+                            modifier = Modifier.size(120.dp)
+                        )
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        Text(
+                            text = "Boutique indisponible",
+                            color = GeekGold,
+                            fontSize = 20.sp,
+                            fontFamily = PlayfairDisplayFontFamily,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            text = state.message.ifBlank { "Une erreur est survenue lors du chargement de la boutique." },
+                            color = GeekWhite.copy(alpha = 0.7f),
+                            fontSize = 14.sp,
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                            lineHeight = 20.sp
+                        )
+
+                        Spacer(modifier = Modifier.height(32.dp))
+
+                        androidx.compose.material3.Button(
+                            onClick = { viewModel.fetchProducts() },
+                            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                                containerColor = GeekGold,
+                                contentColor = GeekBlack
+                            ),
+                            shape = RoundedCornerShape(12.dp)
+                        ) {
+                            Text("Réessayer", fontWeight = FontWeight.Bold)
                         }
                     }
+                }
+                is ShopUiState.Success -> {
+                    LazyVerticalGrid(
+                        columns = GridCells.Adaptive(minSize = 160.dp),
+                        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 32.dp, top = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        // --- LOGO ---
+                        item(span = { GridItemSpan(maxLineSpan) }) {
+                            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.logo_geekement_votre),
+                                    contentDescription = "Logo",
+                                    modifier = Modifier.size(80.dp)
+                                )
+                            }
+                        }
 
-                    // --- HEADER ---
-                    item(span = { GridItemSpan(maxLineSpan) }) {
-                        Spacer(modifier = Modifier.height(8.dp))
-                        ShopHeader(cartCount = cartCount, onCartClick = { showCart = true })
-                        Spacer(modifier = Modifier.height(8.dp))
-                    }
+                        // --- HEADER ---
+                        item(span = { GridItemSpan(maxLineSpan) }) {
+                            Spacer(modifier = Modifier.height(8.dp))
+                            ShopHeader(cartCount = cartCount, onCartClick = { showCart = true })
+                            Spacer(modifier = Modifier.height(8.dp))
+                        }
 
-                    // --- PRODUITS DYNAMIQUES ---
-                    items(state.products) { product ->
-                        ProductCard(
-                            category = product.category ?: "Produit",
-                            name = product.name ?: "Sans nom",
-                            description = product.description ?: "",
-                            price = String.format(Locale.FRANCE, "%.2f€", product.price ?: 0.0),
-                            imageUrl = product.imageUrl,
-                            onAddToCart = { cartViewModel.addToCart(product) }
-                        )
+                        // --- PRODUITS DYNAMIQUES ---
+                        items(state.products) { product ->
+                            ProductCard(
+                                category = product.category ?: "Produit",
+                                name = product.name ?: "Sans nom",
+                                description = product.description ?: "",
+                                price = String.format(Locale.FRANCE, "%.2f€", product.price ?: 0.0),
+                                imageUrl = product.imageUrl,
+                                onAddToCart = { cartViewModel.addToCart(product) }
+                            )
+                        }
                     }
                 }
             }
