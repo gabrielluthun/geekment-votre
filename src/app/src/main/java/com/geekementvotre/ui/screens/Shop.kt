@@ -73,10 +73,16 @@ fun Shop(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+    
+    // Pour garder trace de la commande en cours de paiement
+    var currentOrderId by remember { mutableStateOf<String?>(null) }
 
     val paymentSheet = rememberPaymentSheet { paymentResult ->
         when (paymentResult) {
             is PaymentSheetResult.Completed -> {
+                currentOrderId?.let { id ->
+                    checkoutViewModel.markOrderAsPaid(id)
+                }
                 cartViewModel.clearCart()
                 scope.launch {
                     snackbarHostState.showSnackbar("Paiement réussi ! Merci de votre confiance.")
@@ -97,7 +103,9 @@ fun Shop(
     LaunchedEffect(checkoutState) {
         when (checkoutState) {
             is CheckoutUiState.Success -> {
-                val config = (checkoutState as CheckoutUiState.Success).config
+                val successState = checkoutState as CheckoutUiState.Success
+                val config = successState.config
+                currentOrderId = successState.orderId
                 
                 // On utilise la clé du serveur seulement si elle est valide (commence par pk_)
                 val stripeKey = if (config.publishableKey.startsWith("pk_")) {
@@ -155,9 +163,11 @@ fun Shop(
             )
     ) {
         if (checkoutState is CheckoutUiState.Form) {
+            val cartItems by cartViewModel.cartItems.collectAsState()
             CheckoutFormScreen(
                 viewModel = checkoutViewModel,
                 totalAmount = cartTotal,
+                cartItems = cartItems,
                 onBack = { checkoutViewModel.resetState() }
             )
         } else {
