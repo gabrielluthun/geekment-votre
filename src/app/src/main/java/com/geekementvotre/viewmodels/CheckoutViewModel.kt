@@ -3,11 +3,14 @@ package com.geekementvotre.viewmodels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.geekementvotre.data.model.CartItem
 import com.geekementvotre.data.remote.ClientDto
 import com.geekementvotre.data.remote.CommandeDto
+import com.geekementvotre.data.remote.LigneCommandeDto
 import com.geekementvotre.data.remote.SupabaseClient
 import io.github.jan.supabase.functions.functions
 import io.github.jan.supabase.postgrest.postgrest
+import io.github.jan.supabase.postgrest.query.Columns
 import io.ktor.client.call.body
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,7 +37,7 @@ sealed class CheckoutUiState {
     object Idle : CheckoutUiState()
     object Form : CheckoutUiState()
     object Loading : CheckoutUiState()
-    data class Success(val config: PaymentSheetConfig) : CheckoutUiState()
+    data class Success(val config: PaymentSheetConfig, val orderId: String) : CheckoutUiState()
     data class Error(val message: String) : CheckoutUiState()
 }
 
@@ -96,7 +99,7 @@ class CheckoutViewModel : ViewModel() {
         _uiState.value = CheckoutUiState.Form
     }
 
-    fun prepareCheckout(amountInCents: Long) {
+    fun prepareCheckout(amountInCents: Long, cartItems: List<CartItem>) {
         viewModelScope.launch {
             _uiState.value = CheckoutUiState.Loading
             try {
@@ -126,18 +129,35 @@ class CheckoutViewModel : ViewModel() {
                 val commande = CommandeDto(
                     uuid_client = uuidClient,
                     montant_total = amountInCents / 100.0,
-                    statut = "en_attente"
+                    statut_paiement = "en_attente"
                 )
-                SupabaseClient.client.postgrest["commande"].insert(commande)
+                
+                val createdCommande = SupabaseClient.client.postgrest["commande"].insert(commande) {
+                    select()
+                }.decodeSingle<CommandeDto>()
+                
+                val uuidCommande = createdCommande.uuid_commande ?: throw Exception("Erreur lors de la création de la commande")
 
-                // 3. Appeler la fonction Stripe
+                // 3. Créer les lignes de commande (Goodies choisis)
+                val lignes = cartItems.map { item ->
+                    LigneCommandeDto(
+                        uuid_commande = uuidCommande,
+                        uuid_goodie = item.product.id ?: "",
+                        quantite = item.quantity,
+                        prix_ttc = item.product.price ?: 0.0
+                    )
+                }
+                
+                SupabaseClient.client.postgrest["ligne_commande"].insert(lignes)
+
+                // 4. Appeler la fonction Stripe
                 val response = SupabaseClient.client.functions.invoke(
                     "stripe-paiement",
                     CreatePaymentIntentRequest(amountInCents)
                 )
                 
                 val config = response.body<PaymentSheetConfig>()
-                _uiState.value = CheckoutUiState.Success(config)
+                _uiState.value = CheckoutUiState.Success(config, uuidCommande)
                 
             } catch (e: Exception) {
                 Log.e("CheckoutViewModel", "Error in checkout process", e)
@@ -148,5 +168,24 @@ class CheckoutViewModel : ViewModel() {
 
     fun resetState() {
         _uiState.value = CheckoutUiState.Idle
+    }
+
+    fun markOrderAsPaid(orderId: String) {
+        viewModelScope.launch {
+            try {
+                SupabaseClient.client.postgrest["commande"].update(
+                    {
+                        set("statut_paiement", "payé")
+                    }
+                ) {
+                    filter {
+                        eq("uuid_commande", orderId)
+                    }
+                }
+                Log.d("CheckoutViewModel", "Order $orderId marked as paid")
+            } catch (e: Exception) {
+                Log.e("CheckoutViewModel", "Failed to mark order as paid", e)
+            }
+        }
     }
 }
