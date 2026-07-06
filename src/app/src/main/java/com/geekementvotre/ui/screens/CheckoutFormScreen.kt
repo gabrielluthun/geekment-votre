@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.geekementvotre.R
+import com.geekementvotre.data.model.CartItem
 import com.geekementvotre.ui.components.CustomTextField
 import com.geekementvotre.ui.components.GeekButton
 import com.geekementvotre.ui.components.ReservationSection
@@ -37,6 +38,7 @@ import java.util.Locale
 fun CheckoutFormScreen(
     viewModel: CheckoutViewModel,
     totalAmount: Double,
+    cartItems: List<CartItem>,
     onBack: () -> Unit
 ) {
     val formState by viewModel.formState.collectAsState()
@@ -220,7 +222,7 @@ fun CheckoutFormScreen(
 
         GeekButton(
             text = "Procéder au paiement",
-            onClick = { viewModel.prepareCheckout((totalAmount * 100).toLong()) },
+            onClick = { viewModel.prepareCheckout((totalAmount * 100).toLong(), cartItems) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
