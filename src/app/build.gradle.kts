@@ -38,6 +38,7 @@ android {
         buildConfigField("String", "RESEND_API_URL", "\"${secretsProperties.getProperty("RESEND_API_URL")?.trim() ?: ""}\"")
         buildConfigField("String", "RESEND_FROM_EMAIL", "\"${secretsProperties.getProperty("GEEKEMENT_VOTRE_ON_RESEND_MAIL")?.trim() ?: "onboarding@resend.dev"}\"")
         buildConfigField("String", "PAYPAL_URL", "\"${secretsProperties.getProperty("PAYPAL_URL") ?: ""}\"")
+        buildConfigField("String", "STRIPE_PUBLISHABLE_KEY", "\"${secretsProperties.getProperty("STRIPE_PUBLISHABLE_KEY") ?: ""}\"")
     }
 
     buildTypes {
@@ -87,6 +88,9 @@ dependencies {
 
     // Coil for images
     implementation(libs.coil.compose)
+
+    // Stripe
+    implementation(libs.stripe.android)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

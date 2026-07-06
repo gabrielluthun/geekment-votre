@@ -21,10 +21,18 @@ import com.geekementvotre.ui.screens.ReservationSuccess
 import com.geekementvotre.ui.screens.Shop
 import com.geekementvotre.ui.screens.TerresAmbre
 import com.geekementvotre.ui.theme.GeekementvotreTheme
+import com.stripe.android.PaymentConfiguration
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Initialisation de Stripe
+        PaymentConfiguration.init(
+            applicationContext,
+            BuildConfig.STRIPE_PUBLISHABLE_KEY
+        )
+
         enableEdgeToEdge()
         setContent {
             GeekementvotreTheme {
