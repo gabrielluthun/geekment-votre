@@ -18,6 +18,7 @@ Le projet est dans une phase avancée de développement. Les éléments suivants
 - **Architecture & Navigation** : Navigation moderne via `Scaffold` et `BottomBar` (Jetpack Compose).
 - **Écran d'Accueil** : Vitrine présentant les prestations et les univers de jeu.
 - **Boutique & Goodies** : Chargement dynamique des produits depuis **Supabase Postgrest**.
+- **Système de Paiement** : Intégration sécurisée avec **Stripe** via **Supabase Edge Functions**.
 - **Système de Réservation** : Formulaire complet avec validations strictes.
 - **Système de Contact** : Formulaire sécurisé avec filtre de langage offensant.
 - **Notifications E-mail** : Intégration de **Resend** pour l'envoi de confirmations automatiques (Admin/Client).
@@ -30,7 +31,8 @@ Le projet est dans une phase avancée de développement. Les éléments suivants
 | **Plateforme** | Android (Min SDK 26, Target SDK 36) |
 | **Langage** | Kotlin 2.0 (Compose Compiler) |
 | **UI Framework** | Jetpack Compose avec Material 3 |
-| **Back-end** | Supabase (PostgreSQL, Auth, Storage) |
+| **Back-end** | Supabase (PostgreSQL, Auth, Storage, Edge Functions) |
+| **Paiements** | Stripe SDK & Stripe API |
 | **Emails** | Resend API (via Ktor) |
 | **Networking** | Ktor Client & Kotlinx Serialization |
 | **Sécurité** | R8/ProGuard & Supabase RLS |
@@ -62,6 +64,7 @@ Le projet est dans une phase avancée de développement. Les éléments suivants
    ```properties
    supabase.url=https://votre-id.supabase.co
    supabase.anon_key=votre-cle-anonyme
+   STRIPE_PUBLISHABLE_KEY=votre_cle_test_stripe
    RESEND_API_KEY=votre_cle_api_resend
    CONTACT_EMAIL_RECEIVER=votre@email.com
    ```
