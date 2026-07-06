@@ -1,5 +1,6 @@
 package com.geekementvotre.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -13,12 +14,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ShoppingBag
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.geekementvotre.BuildConfig
 import com.geekementvotre.R
 import java.util.Locale
 import com.geekementvotre.ui.components.CartBottomSheet
@@ -40,24 +46,98 @@ import com.geekementvotre.ui.theme.GeekGold
 import com.geekementvotre.ui.theme.GeekWhite
 import com.geekementvotre.ui.theme.PlayfairDisplayFontFamily
 import com.geekementvotre.viewmodels.CartViewModel
+import com.geekementvotre.viewmodels.CheckoutUiState
+import com.geekementvotre.viewmodels.CheckoutViewModel
 import com.geekementvotre.viewmodels.ShopUiState
 import com.geekementvotre.viewmodels.ShopViewModel
+import com.stripe.android.PaymentConfiguration
+import com.stripe.android.paymentsheet.PaymentSheet
+import com.stripe.android.paymentsheet.PaymentSheetResult
+import com.stripe.android.paymentsheet.rememberPaymentSheet
+import kotlinx.coroutines.launch
 
 @Composable
 fun Shop(
     modifier: Modifier = Modifier,
     viewModel: ShopViewModel = viewModel(),
-    cartViewModel: CartViewModel = viewModel()
+    cartViewModel: CartViewModel = viewModel(),
+    checkoutViewModel: CheckoutViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val cartCount by cartViewModel.cartCount.collectAsState()
+    val cartTotal by cartViewModel.cartTotal.collectAsState()
+    val checkoutState by checkoutViewModel.uiState.collectAsState()
     var showCart by remember { mutableStateOf(false) }
+    
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    val paymentSheet = rememberPaymentSheet { paymentResult ->
+        when (paymentResult) {
+            is PaymentSheetResult.Completed -> {
+                cartViewModel.clearCart()
+                scope.launch {
+                    snackbarHostState.showSnackbar("Paiement réussi ! Merci de votre confiance.")
+                }
+            }
+            is PaymentSheetResult.Canceled -> {
+                // Annulé
+            }
+            is PaymentSheetResult.Failed -> {
+                Log.e("Shop", "Stripe Payment Failed", paymentResult.error)
+                scope.launch {
+                    snackbarHostState.showSnackbar("Échec du paiement : ${paymentResult.error.localizedMessage}")
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(checkoutState) {
+        when (checkoutState) {
+            is CheckoutUiState.Success -> {
+                val config = (checkoutState as CheckoutUiState.Success).config
+                
+                // On utilise la clé du serveur seulement si elle est valide (commence par pk_)
+                val stripeKey = if (config.publishableKey.startsWith("pk_")) {
+                    config.publishableKey
+                } else {
+                    Log.w("Shop", "Clé serveur invalide (${config.publishableKey}), fallback sur BuildConfig")
+                    BuildConfig.STRIPE_PUBLISHABLE_KEY
+                }
+                
+                Log.d("Shop", "Initialisation Stripe avec la clé : ${stripeKey.take(8)}...")
+                PaymentConfiguration.init(context, stripeKey)
+                
+                paymentSheet.presentWithPaymentIntent(
+                    config.paymentIntent,
+                    PaymentSheet.Configuration(
+                        merchantDisplayName = "Geekement Votre",
+                        customer = config.customer?.let {
+                            PaymentSheet.CustomerConfiguration(
+                                id = it,
+                                ephemeralKeySecret = config.ephemeralKey ?: ""
+                            )
+                        }
+                    )
+                )
+                checkoutViewModel.resetState()
+            }
+            is CheckoutUiState.Error -> {
+                scope.launch {
+                    snackbarHostState.showSnackbar((checkoutState as CheckoutUiState.Error).message)
+                }
+                checkoutViewModel.resetState()
+            }
+            else -> {}
+        }
+    }
 
     if (showCart) {
         CartBottomSheet(
             cartViewModel = cartViewModel,
             onCheckout = {
-                // TODO: Implémenter le checkout (ex: Stripe)
+                checkoutViewModel.prepareCheckout((cartTotal * 100).toLong())
                 showCart = false
             },
             onDismiss = { showCart = false }
@@ -167,6 +247,21 @@ fun Shop(
                         )
                     }
                 }
+            }
+        }
+
+        // --- FEEDBACKS ---
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 80.dp)
+        )
+
+        if (checkoutState is CheckoutUiState.Loading) {
+            Box(
+                modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.5f)),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = GeekGold)
             }
         }
     }
