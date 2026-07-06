@@ -112,7 +112,7 @@ fun CartBottomSheet(
                     modifier = Modifier.fillMaxWidth(),
                     contentPadding = PaddingValues(16.dp)
                 ) {
-                    Text("Procéder au paiement (Stripe)")
+                    Text("Procéder au paiement")
                 }
             }
         }
