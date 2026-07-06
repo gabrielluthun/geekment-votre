@@ -5,72 +5,70 @@
 ## Pourquoi utiliser Geekment Vôtre ?
 
 - **Réservation Express** : Réservez un Maître du Jeu (MJ) professionnel pour vos soirées à domicile en quelques secondes.
+- **Boutique Intégrée** : Achetez vos goodies préférés directement depuis l'application avec un panier fluide.
 - **Sécurité & Confidentialité** : Vos données personnelles et vos adresses sont protégées par les meilleurs standards de sécurité et des politiques de confidentialité strictes.
+- **Paiement Sécurisé** : Intégration Stripe pour des transactions sans friction sans stockage de coordonnées bancaires.
 - **Soutenez l'Aventure** : Participez au financement de nouveaux univers et projets via notre section Crowdfunding intégrée.
-- **Contact Direct** : Une question ? Un besoin spécifique ? Envoyez un message directement via l'application.
 
 ---
 ## Spécifications techniques  
 
-### État actuel du projet *(Dernière mise à jour : 02/06/2026)*
+### Ce que permet l'application
 
-Le projet est dans une phase avancée de développement. Les éléments suivants sont fonctionnels :
-- **Architecture & Navigation** : Navigation moderne via `Scaffold` et `BottomBar` (Jetpack Compose).
-- **Écran d'Accueil** : Vitrine présentant les prestations et les univers de jeu.
-- **Boutique & Goodies** : Chargement dynamique des produits depuis **Supabase Postgrest**.
-- **Système de Paiement** : Intégration sécurisée avec **Stripe** via **Supabase Edge Functions**.
-- **Système de Réservation** : Formulaire complet avec validations strictes.
-- **Système de Contact** : Formulaire sécurisé avec filtre de langage offensant.
-- **Notifications E-mail** : Intégration de **Resend** pour l'envoi de confirmations automatiques (Admin/Client).
-- **Sécurité & Optimisation** : Protection Row Level Security (RLS) active, obfuscation **R8/ProGuard** activée, et optimisation des requêtes `upsert().select()`.
+L'application centralise toutes les interactions avec l'univers de **Geekement Vôtre** :
+
+- **Shopping de Goodies** : Parcourir le catalogue, gérer un panier fluide et commander des articles exclusifs.
+- **Tunnel d'Achat Sécurisé** : Validation des coordonnées en temps réel (nom, adresse, téléphone) et paiement sécurisé via Stripe.
+- **Réservation de Sessions** : Planifier des parties de JDR à domicile en choisissant son créneau et le nombre de participants.
+- **Crowdfunding** : Découvrir l'univers du JDR et participer à son financement directement dans l'app.
+- **Gestion des Commandes** : Enregistrement automatique des clients et du détail des commandes (articles, quantités, statut de paiement).
+- **Contact & Support** : Formulaire de contact intégré avec protection contre le langage offensant.
+- **Confirmations Automatiques** : Réception d'e-mails de confirmation pour chaque achat ou réservation effectuée.
 
 ### Technologies utilisées
 
 | Élément | Choix technique |
 |--------|------------------|
-| **Plateforme** | Android (Min SDK 26, Target SDK 36) |
+| **Plateforme** | Android (Min SDK 26, Target SDK 34) |
 | **Langage** | Kotlin 2.0 (Compose Compiler) |
 | **UI Framework** | Jetpack Compose avec Material 3 |
-| **Back-end** | Supabase (PostgreSQL, Auth, Storage, Edge Functions) |
-| **Paiements** | Stripe SDK & Stripe API |
+| **Back-end** | Supabase (PostgreSQL, Postgrest, Edge Functions) |
+| **Paiements** | Stripe Android SDK |
 | **Emails** | Resend API (via Ktor) |
 | **Networking** | Ktor Client & Kotlinx Serialization |
-| **Sécurité** | R8/ProGuard & Supabase RLS |
+| **Sécurité** | Row Level Security (RLS) & Secrets Properties |
 
 ### Structure du dépôt
 
 ```
 ├── doc/                        # Documentation de conception
-│   ├── bdd/                    # Modélisation (MCD, MLD, MPD) et sources .loo
+│   ├── bdd/                    # Modélisation (MCD, MLD, MPD)
 │   ├── contraintes.md          # Spécifications techniques et graphiques
-│   ├── regles-de-gestion.md    # Écrit de la logique métier
-│   ├── etude-stack/            # Comparatifs et justifications technologiques
-│   └── maquette/               # Maquettes des écrans (Home, Boutique, etc.)
-├── public/                     # Assets et ressources statiques
-├── src/                        # Projet Android Studio
-│   ├── app/                    # Module principal
-│   │   └── src/main/java/com/geekementvotre/
-│   │       ├── data/           # Modèles et repositories
-│   │       ├── ui/             # Écrans et composants Compose
-│   │       └── viewmodels/     # Logique de présentation et validations
-│   └── build.gradle.kts        # Configuration des dépendances
+│   ├── regles-de-gestion.md    # Logique métier (Validations, etc.)
+│   └── maquette/               # Designs de référence
+├── src/                        # Code source Android
+│   ├── app/src/main/java/com/geekementvotre/
+│   │   ├── data/               # DTOs (Commande, Client, LigneCommande)
+│   │   ├── ui/                 # Écrans (Shop, Checkout, Reservation)
+│   │   └── viewmodels/         # Gestion d'état et validation
+│   └── build.gradle.kts        # Dépendances
 └── README.md
 ```
 
 ### Installation et Configuration
 
 1. **Cloner le projet**
-2. **Secrets** : Créer un fichier `src/secrets.properties` à la racine du projet Android :
+2. **Secrets** : Créer un fichier `src/secrets.properties` :
    ```properties
    supabase.url=https://votre-id.supabase.co
    supabase.anon_key=votre-cle-anonyme
-   STRIPE_PUBLISHABLE_KEY=votre_cle_test_stripe
-   RESEND_API_KEY=votre_cle_api_resend
-   CONTACT_EMAIL_RECEIVER=votre@email.com
+   STRIPE_PUBLISHABLE_KEY=pk_test_...
+   RESEND_API_KEY=re_...
+   CONTACT_EMAIL_RECEIVER=admin@votremail.com
    ```
-3. **Build** : Synchroniser Gradle et lancer sur un appareil compatible (physique ou virtuel).
+3. **Build** : Synchroniser avec Gradle et déployer.
 
 ## Documentation de référence
 
-- **`doc/regles-de-gestion.md`** — Crucial pour comprendre les validations des formulaires.
-- **`doc/bdd/`** — Structure des tables PostgreSQL.
+- **`doc/regles-de-gestion.md`** — Détails des 45 règles métier appliquées.
+- **`doc/bdd/`** — Schéma complet de la base de données PostgreSQL.
