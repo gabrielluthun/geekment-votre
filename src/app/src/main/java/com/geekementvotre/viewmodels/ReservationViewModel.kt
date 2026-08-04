@@ -51,8 +51,8 @@ data class ReservationUiState(
     val isEmailValid: Boolean
         get() = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
 
-    val isNomValid: Boolean get() = nom.firstOrNull()?.isUpperCase() == true
-    val isPrenomValid: Boolean get() = prenom.firstOrNull()?.isUpperCase() == true
+    val isNomValid: Boolean get() = nom.isNotBlank()
+    val isPrenomValid: Boolean get() = prenom.isNotBlank()
     
     val isTelephoneValid: Boolean get() {
         val digits = telephone.filter { it.isDigit() }
@@ -65,7 +65,7 @@ data class ReservationUiState(
 
     val isNomRueValid: Boolean get() = 
         listOf("Rue", "Avenue", "Chemin", "Impasse", "Boulevard", "Ruelle", "Passerelle")
-            .any { nomRue.startsWith(it, ignoreCase = false) }
+            .any { nomRue.startsWith(it, ignoreCase = true) }
 
     val isCodePostalValid: Boolean get() = 
         codePostal.length == 5 && 
@@ -74,7 +74,7 @@ data class ReservationUiState(
 
     val isNomRueSessionValid: Boolean get() = 
         aDomicileClient || listOf("Rue", "Avenue", "Chemin", "Impasse", "Boulevard", "Ruelle", "Passerelle")
-            .any { nomRueSession.startsWith(it, ignoreCase = false) }
+            .any { nomRueSession.startsWith(it, ignoreCase = true) }
 
     val isCodePostalSessionValid: Boolean get() = 
         aDomicileClient || (

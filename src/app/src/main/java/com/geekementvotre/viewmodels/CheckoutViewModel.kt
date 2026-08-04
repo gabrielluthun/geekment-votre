@@ -52,15 +52,15 @@ data class CheckoutFormState(
     val nomVille: String = ""
 ) {
     val isEmailValid: Boolean get() = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
-    val isNomValid: Boolean get() = nom.isNotEmpty() && nom.first().isUpperCase()
-    val isPrenomValid: Boolean get() = prenom.isNotEmpty() && prenom.first().isUpperCase()
+    val isNomValid: Boolean get() = nom.isNotBlank()
+    val isPrenomValid: Boolean get() = prenom.isNotBlank()
     val isTelephoneValid: Boolean get() {
         val digits = telephone.filter { it.isDigit() }
         return if (telephone.startsWith("+33")) digits.length == 11 else if (telephone.startsWith("0")) digits.length == 10 else false
     }
     val isNomRueValid: Boolean get() = 
         listOf("Rue", "Avenue", "Chemin", "Impasse", "Boulevard", "Ruelle", "Passerelle")
-            .any { nomRue.startsWith(it, ignoreCase = false) }
+            .any { nomRue.startsWith(it, ignoreCase = true) }
     val isCodePostalValid: Boolean get() = codePostal.length == 5 && codePostal.all { it.isDigit() } && codePostal.take(2).toIntOrNull()?.let { it in 1..95 } == true
 
     val canSubmit: Boolean get() = isNomValid && isPrenomValid && isEmailValid && isTelephoneValid && isNomRueValid && isCodePostalValid && nomVille.isNotBlank()
@@ -168,6 +168,7 @@ class CheckoutViewModel : ViewModel() {
 
     fun resetState() {
         _uiState.value = CheckoutUiState.Idle
+        _formState.value = CheckoutFormState()
     }
 
     fun markOrderAsPaid(orderId: String) {
