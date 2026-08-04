@@ -84,6 +84,57 @@ object ResendService {
     }
 
     /**
+     * Envoie un e-mail pour une nouvelle demande de réservation de session JDR.
+     */
+    suspend fun sendReservationEmail(
+        nom: String,
+        userEmail: String,
+        dateSession: String,
+        creneau: String,
+        nbJoueurs: Int,
+        typeJeu: String,
+        lieu: String,
+        message: String?
+    ): Boolean {
+        return try {
+            val adminRes = client.post(RESEND_API_URL) {
+                header("Authorization", "Bearer $API_KEY")
+                contentType(ContentType.Application.Json)
+                setBody(ResendEmailRequest(
+                    from = "Geekement Votre $FROM_EMAIL",
+                    to = listOf(OWNER_EMAIL),
+                    subject = "Nouvelle Réservation JDR - $dateSession",
+                    html = createReservationEmailHtml(nom, userEmail, dateSession, creneau, nbJoueurs, typeJeu, lieu, message, isForAdmin = true)
+                ))
+            }
+
+            val adminSuccess = adminRes.status.isSuccess()
+
+            if (adminSuccess) {
+                try {
+                    client.post(RESEND_API_URL) {
+                        header("Authorization", "Bearer $API_KEY")
+                        contentType(ContentType.Application.Json)
+                        setBody(ResendEmailRequest(
+                            from = "Geekement Votre $FROM_EMAIL",
+                            to = listOf(userEmail),
+                            subject = "Demande de réservation reçue ! - Geekement Votre",
+                            html = createReservationEmailHtml(nom, userEmail, dateSession, creneau, nbJoueurs, typeJeu, lieu, message, isForAdmin = false)
+                        ))
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+
+            adminSuccess
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
+    }
+
+    /**
      * Envoie un e-mail de confirmation de commande.
      */
     suspend fun sendOrderConfirmationEmail(
@@ -206,7 +257,105 @@ object ResendService {
                 
                 <div style="margin-top: 40px; border-top: 1px solid #333; padding-top: 20px;">
                     <p style="font-size: 14px; color: #D4AF37; font-weight: bold; margin-bottom: 5px;">Prépare tes dés, l'aventure ne fait que commencer !</p>
-                    <p style="font-size: 12px; color: #888;">Gabriel — Ton MJ & Animateur Pop-Culture</p>
+                    <p style="font-size: 12px; color: #888;">Nicky, Ton MJ & Animateur Pop-Culture de Geekement</p>
+                </div>
+            </div>
+        """.trimIndent()
+    }
+
+    private fun createReservationEmailHtml(
+        nom: String,
+        email: String,
+        dateSession: String,
+        creneau: String,
+        nbJoueurs: Int,
+        typeJeu: String,
+        lieu: String,
+        message: String?,
+        isForAdmin: Boolean
+    ): String {
+        val dateNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
+        
+        val content = if (isForAdmin) {
+            """
+                <h1 style="color: #D4AF37; font-size: 24px; margin: 0 0 10px 0; font-weight: bold;">Nouvelle Demande de JDR !</h1>
+                <p style="color: #888; font-size: 14px; margin-bottom: 25px;">Reçue le $dateNow</p>
+                
+                <div style="text-align: left; background-color: #1A1A1A; padding: 25px; border-radius: 12px; border: 1px solid #D4AF37;">
+                    <div style="margin-bottom: 20px;">
+                        <p style="font-size: 11px; color: #D4AF37; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 1.5px; font-weight: bold;">Client</p>
+                        <p style="font-size: 16px; color: #FFFFFF; margin: 0;"><strong>$nom</strong></p>
+                        <p style="font-size: 14px; color: #888; margin: 2px 0 0 0;">$email</p>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr>
+                                <td style="width: 50%; vertical-align: top; padding-right: 10px;">
+                                    <p style="font-size: 11px; color: #D4AF37; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 1.5px; font-weight: bold;">Date & Créneau</p>
+                                    <p style="font-size: 15px; color: #FFFFFF; margin: 0;">$dateSession</p>
+                                    <p style="font-size: 14px; color: #888; margin: 0;">$creneau</p>
+                                </td>
+                                <td style="width: 50%; vertical-align: top;">
+                                    <p style="font-size: 11px; color: #D4AF37; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 1.5px; font-weight: bold;">Session</p>
+                                    <p style="font-size: 15px; color: #FFFFFF; margin: 0;">$typeJeu</p>
+                                    <p style="font-size: 14px; color: #888; margin: 0;">$nbJoueurs aventuriers</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <p style="font-size: 11px; color: #D4AF37; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 1.5px; font-weight: bold;">Lieu</p>
+                        <p style="font-size: 15px; color: #FFFFFF; margin: 0;">$lieu</p>
+                    </div>
+
+                    ${if (!message.isNullOrBlank()) """
+                    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #333;">
+                        <p style="font-size: 11px; color: #D4AF37; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 1.5px; font-weight: bold;">Note du client</p>
+                        <p style="font-size: 14px; color: #E0E0E0; margin: 0; font-style: italic; line-height: 1.6;">"$message"</p>
+                    </div>
+                    """ else ""}
+                </div>
+            """.trimIndent()
+        } else {
+            """
+                <h1 style="color: #D4AF37; font-size: 26px; margin: 0 0 15px 0;">Aventure confirmée !</h1>
+                <p style="font-size: 16px; line-height: 1.6; color: #E0E0E0; margin-bottom: 25px;">
+                    Salut $nom ! Ta demande de session JDR pour le <strong style="color: #D4AF37;">$dateSession</strong> a bien été transmise.
+                </p>
+                
+                <div style="text-align: left; background-color: #1A1A1A; padding: 25px; border-radius: 12px; border: 1px solid #333; margin-bottom: 25px;">
+                    <p style="font-size: 18px; color: #D4AF37; font-weight: bold; margin: 0 0 15px 0; text-align: center; border-bottom: 1px solid #333; padding-bottom: 15px;">
+                        Récapitulatif de l'expédition
+                    </p>
+                    <p style="margin: 10px 0; color: #E0E0E0; font-size: 15px;">📅 <strong>Date :</strong> $dateSession ($creneau)</p>
+                    <p style="margin: 10px 0; color: #E0E0E0; font-size: 15px;">⚔️ <strong>Univers :</strong> $typeJeu</p>
+                    <p style="margin: 10px 0; color: #E0E0E0; font-size: 15px;">👥 <strong>Groupe :</strong> $nbJoueurs aventuriers</p>
+                    <p style="margin: 10px 0; color: #E0E0E0; font-size: 15px;">📍 <strong>Lieu :</strong> $lieu</p>
+                </div>
+                
+                <p style="font-size: 15px; line-height: 1.6; color: #AAA; text-align: center;">
+                    Je vérifie mon grimoire et je te recontacte très vite pour valider les derniers détails de votre quête !
+                </p>
+            """.trimIndent()
+        }
+
+        return """
+            <div style="font-family: Arial, sans-serif; background-color: #0F0F0F; color: #FFFFFF; padding: 40px; text-align: center; max-width: 600px; margin: 0 auto; border: 1px solid #333;">
+                <div style="margin-bottom: 30px; text-align: center;">
+                    <img src="$LOGO_URL?v=1" 
+                         alt="Geekement Votre" 
+                         width="130" 
+                         height="auto"
+                         style="display: block; margin: 0 auto; border: 0; outline: none; text-decoration: none; width: 130px;" />
+                </div>
+                
+                $content
+                
+                <div style="margin-top: 40px; border-top: 1px solid #333; padding-top: 20px;">
+                    <p style="font-size: 14px; color: #D4AF37; font-weight: bold; margin-bottom: 5px;">Prépare tes dés, l'aventure ne fait que commencer !</p>
+                    <p style="font-size: 12px; color: #888;">Nicky, Ton MJ & Animateur préféré :</p>
                 </div>
             </div>
         """.trimIndent()
@@ -216,33 +365,49 @@ object ResendService {
         nom: String, 
         email: String? = null, 
         sujet: String? = null, 
-        message: String? = null, 
+        message: String? = null,
         isForAdmin: Boolean
     ): String {
+        val dateNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
+        
         val content = if (isForAdmin) {
             """
-                <h1 style="color: #D4AF37; font-size: 22px; margin-bottom: 20px;">Nouveau message de contact</h1>
-                <div style="text-align: left; background-color: #1A1A1A; padding: 20px; border-radius: 8px; border: 1px solid #333;">
-                    <p style="font-size: 14px; color: #D4AF37; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 1px;">Expéditeur</p>
-                    <p style="font-size: 16px; color: #FFFFFF; margin: 0 0 15px 0;">$nom ($email)</p>
+                <h1 style="color: #D4AF37; font-size: 24px; margin: 0 0 10px 0; font-weight: bold;">Nouveau Message !</h1>
+                <p style="color: #888; font-size: 14px; margin-bottom: 25px;">Reçu le $dateNow</p>
+                
+                <div style="text-align: left; background-color: #1A1A1A; padding: 25px; border-radius: 12px; border: 1px solid #D4AF37;">
+                    <div style="margin-bottom: 20px;">
+                        <p style="font-size: 11px; color: #D4AF37; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 1.5px; font-weight: bold;">Expéditeur</p>
+                        <p style="font-size: 16px; color: #FFFFFF; margin: 0;"><strong>$nom</strong></p>
+                        <p style="font-size: 14px; color: #888; margin: 2px 0 0 0;">$email</p>
+                    </div>
                     
-                    <p style="font-size: 14px; color: #D4AF37; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 1px;">Sujet</p>
-                    <p style="font-size: 16px; color: #FFFFFF; margin: 0 0 15px 0;">$sujet</p>
+                    <div style="margin-bottom: 20px;">
+                        <p style="font-size: 11px; color: #D4AF37; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 1.5px; font-weight: bold;">Sujet</p>
+                        <p style="font-size: 16px; color: #FFFFFF; margin: 0;">$sujet</p>
+                    </div>
                     
-                    <hr style="border: 0; border-top: 1px solid #333; margin: 20px 0;" />
-                    
-                    <p style="font-size: 16px; color: #FFFFFF; white-space: pre-wrap; line-height: 1.6;">$message</p>
+                    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #333;">
+                        <p style="font-size: 11px; color: #D4AF37; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 1.5px; font-weight: bold;">Message</p>
+                        <p style="font-size: 15px; color: #E0E0E0; margin: 0; line-height: 1.6; white-space: pre-wrap;">$message</p>
+                    </div>
                 </div>
             """.trimIndent()
         } else {
             """
-                <h1 style="color: #D4AF37; font-size: 24px; margin-bottom: 20px;">Merci $nom !</h1>
-                <p style="font-size: 16px; line-height: 1.6; color: #E0E0E0;">
-                    Ton message a bien franchi les portails de <strong>Geekement Vôtre</strong> !
+                <h1 style="color: #D4AF37; font-size: 26px; margin: 0 0 15px 0;">Message bien reçu !</h1>
+                <p style="font-size: 16px; line-height: 1.6; color: #E0E0E0; margin-bottom: 25px;">
+                    Salut $nom ! Ton message a bien franchi les portails de <strong style="color: #D4AF37;">Geekement Vôtre</strong>.
                 </p>
-                <p style="font-size: 16px; line-height: 1.6; color: #E0E0E0;">
-                    Je suis déjà en train d'analyser ta requête avec soin et je reviendrai vers toi très rapidement.
-                </p>
+                
+                <div style="text-align: left; background-color: #1A1A1A; padding: 25px; border-radius: 12px; border: 1px solid #333; margin-bottom: 25px;">
+                    <p style="font-size: 18px; color: #D4AF37; font-weight: bold; margin: 0 0 15px 0; text-align: center; border-bottom: 1px solid #333; padding-bottom: 15px;">
+                        Analyse en cours...
+                    </p>
+                    <p style="font-size: 15px; line-height: 1.6; color: #E0E0E0; text-align: center;">
+                        Je suis déjà en train d'analyser ta requête avec soin et je reviendrai vers toi très rapidement par e-mail.
+                    </p>
+                </div>
             """.trimIndent()
         }
 
