@@ -278,24 +278,30 @@ fun TerresAmbre(modifier: Modifier = Modifier) {
                 onClick = { uriHandler.openUri(paypalUrl) },
                 colors = ButtonDefaults.buttonColors(containerColor = GeekGold),
                 shape = RoundedCornerShape(12.dp),
-                contentPadding = PaddingValues(horizontal = 24.dp, vertical = 14.dp),
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 14.dp),
                 modifier = Modifier
-                    .fillMaxWidth(0.8f)
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
                     .padding(bottom = 40.dp)
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
                     Text(
                         "Participer au financement",
                         color = GeekBlack,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 15.sp
+                        fontSize = 14.sp,
+                        textAlign = TextAlign.Center,
+                        lineHeight = 16.sp
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Icon(
                         Icons.AutoMirrored.Filled.ArrowForward,
                         contentDescription = null,
                         tint = GeekBlack,
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(18.dp)
                     )
                 }
             }
