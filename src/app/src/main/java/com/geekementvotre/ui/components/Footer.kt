@@ -132,10 +132,15 @@ fun Footer(
                             
                             Text(
                                 text = item.label,
-                                fontSize = 9.sp,
+                                fontSize = 8.sp,
                                 fontFamily = MontserratFontFamily,
                                 fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
-                                color = contentColor
+                                color = contentColor,
+                                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                                lineHeight = 10.sp,
+                                maxLines = 2,
+                                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                                letterSpacing = (-0.2).sp
                             )
                         }
                         
