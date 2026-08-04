@@ -106,7 +106,7 @@ fun Home(
             Spacer(modifier = Modifier.height(32.dp))
 
             // --- BOUTONS D'ACTION ---
-            if (screenWidth < 340.dp) {
+            if (screenWidth < 400.dp) {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
