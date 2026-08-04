@@ -7,6 +7,7 @@ import com.geekementvotre.data.model.CartItem
 import com.geekementvotre.data.remote.ClientDto
 import com.geekementvotre.data.remote.CommandeDto
 import com.geekementvotre.data.remote.LigneCommandeDto
+import com.geekementvotre.data.remote.ResendService
 import com.geekementvotre.data.remote.SupabaseClient
 import io.github.jan.supabase.functions.functions
 import io.github.jan.supabase.postgrest.postgrest
@@ -171,7 +172,7 @@ class CheckoutViewModel : ViewModel() {
         _formState.value = CheckoutFormState()
     }
 
-    fun markOrderAsPaid(orderId: String) {
+    fun markOrderAsPaid(orderId: String, nom: String, email: String, montant: Double, items: List<String>) {
         viewModelScope.launch {
             try {
                 SupabaseClient.client.postgrest["commande"].update(
@@ -184,8 +185,20 @@ class CheckoutViewModel : ViewModel() {
                     }
                 }
                 Log.d("CheckoutViewModel", "Order $orderId marked as paid")
+                
+                // Envoi du mail de confirmation
+                ResendService.sendOrderConfirmationEmail(
+                    nom = nom,
+                    userEmail = email,
+                    orderId = orderId,
+                    montant = montant,
+                    items = items
+                )
+                
+                // On vide le formulaire SEULEMENT ICI, après l'envoi du mail réussi
+                resetState()
             } catch (e: Exception) {
-                Log.e("CheckoutViewModel", "Failed to mark order as paid", e)
+                Log.e("CheckoutViewModel", "Failed to mark order as paid or send email", e)
             }
         }
     }
