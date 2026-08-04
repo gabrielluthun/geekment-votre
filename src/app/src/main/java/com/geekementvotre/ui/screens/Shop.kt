@@ -81,7 +81,17 @@ fun Shop(
         when (paymentResult) {
             is PaymentSheetResult.Completed -> {
                 currentOrderId?.let { id ->
-                    checkoutViewModel.markOrderAsPaid(id)
+                    val currentForm = checkoutViewModel.formState.value
+                    val currentCartItems = cartViewModel.cartItems.value
+                    val currentTotal = cartViewModel.cartTotal.value
+                    
+                    checkoutViewModel.markOrderAsPaid(
+                        orderId = id,
+                        nom = "${currentForm.prenom} ${currentForm.nom}",
+                        email = currentForm.email,
+                        montant = currentTotal,
+                        items = currentCartItems.map { "${it.quantity}x ${it.product.name ?: "Article"}" }
+                    )
                 }
                 cartViewModel.clearCart()
                 scope.launch {
@@ -130,7 +140,6 @@ fun Shop(
                         }
                     )
                 )
-                checkoutViewModel.resetState()
             }
             is CheckoutUiState.Error -> {
                 scope.launch {
