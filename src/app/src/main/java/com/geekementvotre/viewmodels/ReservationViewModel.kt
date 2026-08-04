@@ -211,6 +211,24 @@ class ReservationViewModel : ViewModel() {
 
                 SupabaseClient.client.postgrest["reservation"].insert(reservation)
                 
+                // 3. Envoi du mail de confirmation (Admin + Client)
+                val lieuComplet = if (currentState.aDomicileClient) {
+                    "${currentState.numeroRue} ${currentState.nomRue}, ${currentState.codePostal} ${currentState.nomVille}"
+                } else {
+                    "${currentState.numeroRueSession} ${currentState.nomRueSession}, ${currentState.codePostalSession} ${currentState.nomVilleSession}"
+                }
+
+                com.geekementvotre.data.remote.ResendService.sendReservationEmail(
+                    nom = "${currentState.prenom} ${currentState.nom}",
+                    userEmail = currentState.email,
+                    dateSession = currentState.dateSession?.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")) ?: "",
+                    creneau = currentState.creneauHoraire,
+                    nbJoueurs = currentState.nbJoueurs.toIntOrNull() ?: 0,
+                    typeJeu = currentState.typeJeu,
+                    lieu = lieuComplet,
+                    message = currentState.messageDemande
+                )
+
                 _uiState.value = ReservationUiState(submissionSuccess = true)
             } catch (e: Exception) {
                 Log.e("ReservationViewModel", "Erreur lors de la réservation", e)
