@@ -164,7 +164,7 @@ private fun ContactHeader() {
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            text = "CONTACTEZ-MOI",
+            text = "CONTACTEZ-NOUS",
             style = MaterialTheme.typography.displaySmall.copy(
                 fontFamily = PlayfairDisplayFontFamily,
                 fontWeight = FontWeight.Bold,

@@ -128,7 +128,7 @@ fun Home(
 
             // --- SECTION PRESTATIONS ---
             Text(
-                text = "MES PRESTATIONS",
+                text = "NOS PRESTATIONS",
                 style = MaterialTheme.typography.displayLarge,
                 color = GeekWhite,
                 fontSize = 24.sp,
@@ -254,7 +254,7 @@ fun Home(
 
             // --- SECTION JEUX ---
             Text(
-                text = "MES JEUX",
+                text = "NOS JEUX",
                 style = MaterialTheme.typography.displayLarge,
                 color = GeekWhite,
                 fontSize = 24.sp,
