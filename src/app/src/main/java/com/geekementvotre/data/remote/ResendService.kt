@@ -257,7 +257,7 @@ object ResendService {
                 
                 <div style="margin-top: 40px; border-top: 1px solid #333; padding-top: 20px;">
                     <p style="font-size: 14px; color: #D4AF37; font-weight: bold; margin-bottom: 5px;">Prépare tes dés, l'aventure ne fait que commencer !</p>
-                    <p style="font-size: 12px; color: #888;">Nicky, Ton MJ & Animateur Pop-Culture de Geekement</p>
+                    <p style="font-size: 12px; color: #888;">Nicky, Ton MJ & Animateur préféré :)</p>
                 </div>
             </div>
         """.trimIndent()
@@ -355,7 +355,7 @@ object ResendService {
                 
                 <div style="margin-top: 40px; border-top: 1px solid #333; padding-top: 20px;">
                     <p style="font-size: 14px; color: #D4AF37; font-weight: bold; margin-bottom: 5px;">Prépare tes dés, l'aventure ne fait que commencer !</p>
-                    <p style="font-size: 12px; color: #888;">Nicky, Ton MJ & Animateur préféré :</p>
+                    <p style="font-size: 12px; color: #888;">Nicky, Ton MJ & Animateur préféré :)</p>
                 </div>
             </div>
         """.trimIndent()
